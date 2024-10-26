@@ -11,7 +11,7 @@
 #include "OpenGL.h"
 #include "Callbacks.h"
 #include "Figures.h"
-
+#define M_PI 3.14159265358979323846
 using namespace std;
 using namespace glm;
 
@@ -84,16 +84,18 @@ int main(void)
             fig->renderFigure();
         }
 
+        float currentTime = glfwGetTime(); //fornisce il tempo trascorso in secondi 
+        float raggiox = sin(currentTime * 2.0f * M_PI) * 0.25f + 0.75; //l valore di raggiox varia sinusoidalmente nel tempo tra 0.5 ed 1
+        heart.updateHeart(raggiox);
 
-        for (Figure* fig : dynamicFigures) {
-            fig->renderFigure();
-        }
         /* Swap front and back buffers */
         glfwSwapBuffers(window);
 
         /* Poll for and process events */
         glfwPollEvents();
     }
+
+
     openGLManager.initShaders();
     for (Figure* fig : staticFigures) {
         fig->deleteFigure();

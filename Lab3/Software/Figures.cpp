@@ -104,6 +104,22 @@ void Figure::renderFigure() {
     glDrawArrays(this->renderMode, 0, this->numberOfVertices);
 }
 
+void Figure::updateFigure() {
+    glBindVertexArray(this->VAO);
+
+    // Aggiorna i vertici
+    glBindBuffer(GL_ARRAY_BUFFER, this->VBO_vertices);
+    glBufferSubData(GL_ARRAY_BUFFER, 0, this->vertices.size() * sizeof(vec3), this->vertices.data());
+
+
+    glBindBuffer(GL_ARRAY_BUFFER, this->VBO_colors);
+    glBufferSubData(GL_ARRAY_BUFFER, 0, this->colors.size() * sizeof(vec4), this->colors.data());
+
+    glBindBuffer(GL_ARRAY_BUFFER, 0);
+    glBindVertexArray(0);
+}
+
+
 
 
 Triangle::Triangle() : Figure() {}
@@ -225,6 +241,30 @@ void Heart::initFigure(int typeOfDraw) {
     this->renderMode = GL_TRIANGLE_FAN;
     Figure::initFigure(typeOfDraw);
 
+}
+
+void Heart::updateHeart(float newScaleSize) {
+    this->scaleSize = newScaleSize;
+
+    float t, xx, yy;
+    float stepA = (2 * M_PI) / this->nTriangles;
+
+    this->vertices.clear();  // Pulisce i vecchi vertici
+    this->colors.clear();
+    this->vertices.push_back(vec3(this->centerX, this->centerY, 0.0)); // Centro del cuore
+    this->colors.push_back(vec4(1.0, 1.0, 1.0, 1.0));
+
+    for (unsigned int i = 0; i <= this->nTriangles; i++) {
+        t = (float)i * stepA;
+        xx = this->centerX + (this->radiusX * (16 * pow(sin(t), 3))) * this->scaleSize;
+        yy = this->centerY + (this->radiusY * (13 * cos(t) - 5 * cos(2 * t) - 2 * cos(3 * t) - cos(4 * t))) * this->scaleSize;
+        this->vertices.push_back(vec3(xx, yy, 0.0));
+        
+        this->colors.push_back(vec4(1.0, 0.0, 0.0, 1.0));
+    }
+
+    this->updateFigure();  // Chiama il metodo per aggiornare i buffer
+    this->renderFigure();
 }
 
 

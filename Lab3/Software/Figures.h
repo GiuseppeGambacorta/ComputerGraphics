@@ -13,6 +13,7 @@ public:
     virtual void initFigure(int TypeOfDraw) = 0;  // Pure virtual function
     void renderFigure();
     void deleteFigure();
+    void updateFigure();
 protected:
     GLuint VAO;                      // Identifier for the Vertex Array Object (VAO)
     GLuint VBO_vertices;             // Identifier for the Vertex Buffer Object (VBO) containing vertex coordinates
@@ -66,6 +67,7 @@ private:
 public:
     Heart(float cx, float cy, float rx, float ry, unsigned int numberOfTriangles, float scaleSize= 1.0f);
     void initFigure(int TypeOfDraw) override;
+    void updateHeart(float newScaleSize);
 };
 
 
