@@ -3,34 +3,54 @@
 
 void Figure::initVAO() {
 
-    //La funzione INIT_VAO  ha per input Figura* fig, che è un puntatore  che punta all'indirizzo ricevuto.
-    //In questo modo è possibile modificare direttamente i dati della struttura originale, evitando la creazione di copie inutili.
+    // The INIT_VAO function initializes the Vertex Array Object (VAO) for the Figure class.
+    // By using the 'this' pointer, it directly modifies the data of the original structure, avoiding unnecessary copies.
 
-    glGenVertexArrays(1, &this->VAO);
-    glBindVertexArray(this->VAO);
-    //Genero , rendo attivo, riempio il VBO della geometria dei vertices
-    glGenBuffers(1, &this->VBO_vertices);
-    glBindBuffer(GL_ARRAY_BUFFER, this->VBO_vertices);
+    glGenVertexArrays(1, &this->VAO);               // Generate one Vertex Array Object and store its ID in VAO
+    glBindVertexArray(this->VAO);                   // Bind the VAO, making it the current VAO for subsequent operations
 
-    //fig->vertices.size() : Ottiene il numero di elementi nel vettore vertices della struttura Figura puntata da fig.
-    // sizeof(vec3) : Ottiene la dimensione in byte di un singolo elemento di tipo vec3.
-    //La moltiplicazione fig->vertices.size() * sizeof(vec3): calcola la dimensione totale in byte dei dati dei vertici. Calcola la dimensione totale in byte di tutti i dati dei vertici.
+    // Generate, activate, and fill the VBO for the vertex geometry
+    glGenBuffers(1, &this->VBO_vertices);          // Generate one Vertex Buffer Object (VBO) for vertices
+    glBindBuffer(GL_ARRAY_BUFFER, this->VBO_vertices); // Bind the VBO for vertex data
 
-    //fig->vertices.data() : fornisce un puntatore all'inizio dei dati del vettore vertices. Questo puntatore indica la posizione esatta in memoria dove sono memorizzati i dati
+ 
+    int areaSize = this->vertices.size() * sizeof(vec3);
+    vec3* startAreaPointer = this->vertices.data(); 
 
-    glBufferData(GL_ARRAY_BUFFER, this->vertices.size() * sizeof(vec3), this->vertices.data(), GL_STATIC_DRAW);
 
-    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 0, (void*)0);
-    glEnableVertexAttribArray(0);
+    // Allocate and initialize buffer data
+// - GL_ARRAY_BUFFER: target buffer type (for vertex attributes)
+// - areaSize: size in bytes of the data store to allocate
+// - startAreaPointer: pointer to the data to initialize the buffer with (can be nullptr if no initial data is needed)
+// - GL_STATIC_DRAW: hint that the data will not change often and is used for drawing operations
+    glBufferData(GL_ARRAY_BUFFER, areaSize, startAreaPointer, GL_STATIC_DRAW); 
 
-    //Genero , rendo attivo, riempio il VBO dei colori
-    glGenBuffers(1, &this->VBO_colors);
-    glBindBuffer(GL_ARRAY_BUFFER, this->VBO_colors);
-    glBufferData(GL_ARRAY_BUFFER, this->colors.size() * sizeof(vec4), this->colors.data(), GL_STATIC_DRAW);
-    //Adesso carico il VBO dei coloris nel layer 2
-    glVertexAttribPointer(1, 4, GL_FLOAT, GL_FALSE, 0, (void*)0);
-    glEnableVertexAttribArray(1);
+    // Specify layout for vertex attributes
+// - 0: index of the vertex attribute (matches the layout(location = 0) in the vertex shader)
+// - 3: number of components per vertex attribute (for vec3: x, y, z)
+// - GL_FLOAT: data type of each component
+// - GL_FALSE: specifies that the data is not normalized
+// - 0: stride, indicating the byte offset between consecutive vertex attributes (0 means tightly packed)
+// - (void*)0: offset of the first component of the first vertex attribute in the array
+    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 0, (void*)0); 
+    glEnableVertexAttribArray(0); // Enable the vertex attribute array at index 0
+
+    // Generate, activate, and fill the VBO for colors
+    glGenBuffers(1, &this->VBO_colors); // Generate one VBO for colors
+    glBindBuffer(GL_ARRAY_BUFFER, this->VBO_colors); // Bind the VBO for color data
+
+    
+    areaSize = this->colors.size() * sizeof(vec4); 
+    vec4* startAreaPointer = this->colors.data(); 
+
+    // Allocate and initialize buffer data for colors
+    glBufferData(GL_ARRAY_BUFFER, areaSize, startAreaPointer, GL_STATIC_DRAW);
+
+    // Load the color VBO into layout index 1
+    glVertexAttribPointer(1, 4, GL_FLOAT, GL_FALSE, 0, (void*)0); // Specify layout for color attributes
+    glEnableVertexAttribArray(1); // Enable the vertex attribute array at index 1
 }
+
 
 void Figure::deleteFigure() {
     glDeleteBuffers(1, &this->VBO_vertices);
@@ -54,17 +74,18 @@ void Triangle::initFigure() {
 
 void Triangle::renderFigure() {
 
-    //Questa istruzione "lega" o "attiva" il Vertex Array Object (VAO) di triangolo .
+    // This instruction "binds" or "activates" the Vertex Array Object (VAO) of the triangle.
     glBindVertexArray(this->VAO);
 
-    //Questa istruzione effettua il disegno vero e proprio utilizzando il program shader programId
-    //GL_TRIANGLES: Indica che i vertici nel buffer devono essere interpretati come triangoli.
-    //0 : Indica l'indice del primo vertice da utilizzare.
-    //3 : Indica il numero di vertici da utilizzare.
+    // This instruction performs the actual drawing using the shader program.
+    // GL_TRIANGLES: Indicates that the vertices in the buffer should be interpreted as triangles.
+    // 0: Indicates the index of the first vertex to use.
+    // 3: Indicates the number of vertices to use.
 
     glDrawArrays(GL_TRIANGLES, 0, 3);
 
+    // Draw the triangles using the specified render mode and number of vertices.
     glDrawArrays(this->renderMode, 0, this->nv);
-
 }
+
 

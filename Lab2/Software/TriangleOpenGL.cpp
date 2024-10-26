@@ -51,7 +51,6 @@ int main(void)
     triangolo.initFigure();
    
 
-
     /* Loop until the user closes the window (Ripeti il ciclo finché l'utente non chiude la finestra) */
     while (!glfwWindowShouldClose(window))
     {
