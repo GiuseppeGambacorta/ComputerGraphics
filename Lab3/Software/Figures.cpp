@@ -117,6 +117,7 @@ void Figure::updateFigure() {
 
     glBindBuffer(GL_ARRAY_BUFFER, 0);
     glBindVertexArray(0);
+    renderFigure();
 }
 
 
@@ -263,8 +264,7 @@ void Heart::updateHeart(float newScaleSize) {
         this->colors.push_back(vec4(1.0, 0.0, 0.0, 1.0));
     }
 
-    this->updateFigure();  // Chiama il metodo per aggiornare i buffer
-    this->renderFigure();
+    this->updateFigure();  
 }
 
 

@@ -18,11 +18,11 @@ using namespace glm;
 float r = 0.0, g = 1.0, b = 0.0;
 
 
-unsigned int programId;
 Triangle triangle;
 Circle circle(0.0, 0.0, 0.1, 0.1, 300);
 Butterfly butterfly(0.3, 0.5, 0.1, 0.1, 300,1.0);
 Heart heart(0.5, 0.5, 0.1, 0.1, 300, 0.1);
+
 vector<Figure*> staticFigures;
 vector<Figure*> dynamicFigures;
 
@@ -85,8 +85,8 @@ int main(void)
         }
 
         float currentTime = glfwGetTime(); //fornisce il tempo trascorso in secondi 
-        float raggiox = sin(currentTime * 2.0f * M_PI) * 0.25f + 0.75; //l valore di raggiox varia sinusoidalmente nel tempo tra 0.5 ed 1
-        heart.updateHeart(raggiox);
+        float DistanzaDaAmal = sin(currentTime * 2.0f * M_PI) * 0.25f + 0.75; //l valore di raggiox varia sinusoidalmente nel tempo tra 0.5 ed 1
+        heart.updateHeart(DistanzaDaAmal);
 
         /* Swap front and back buffers */
         glfwSwapBuffers(window);
