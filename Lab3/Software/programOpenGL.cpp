@@ -19,7 +19,11 @@ float r = 0.0, g = 1.0, b = 0.0;
 
 
 unsigned int programId;
-Triangle triangolo;
+Triangle triangle;
+Circle circle(0.0, 0.0, 0.1, 0.1, 300);
+Butterfly butterfly(0.3, 0.5, 0.1, 0.1, 300,1.0);
+Heart heart(0.5, 0.5, 0.1, 0.1, 300, 0.1);
+vector<Figure*> figures;
 
 OpenGLManager openGLManager;
 GLFWwindow* window;
@@ -27,7 +31,7 @@ GLFWwindow* window;
 
 int main(void)
 {
-
+    
     if (!openGLManager.initOpenGL()) {
         return -1;
     }
@@ -47,8 +51,19 @@ int main(void)
     openGLManager.setCallbacks();
     openGLManager.initShaders();
 
-   
-    triangolo.initFigure();
+    figures.push_back(&triangle);
+    figures.push_back(&circle);
+    figures.push_back(&butterfly);
+    figures.push_back(&heart);
+
+  
+    for (Figure* fig : figures) {
+        fig->initFigure();
+    }
+
+
+    glEnable(GL_BLEND);
+    glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
    
 
     /* Loop until the user closes the window (Ripeti il ciclo finché l'utente non chiude la finestra) */
@@ -57,9 +72,10 @@ int main(void)
 
         glClearColor(r, g, b, 1.0f); // Set background color for the frame, colors must be in 0,1 range
         glClear(GL_COLOR_BUFFER_BIT); // Clear color buffer with set background color
-
-        triangolo.renderFigure();
-
+        
+        for (Figure* fig : figures) {
+            fig->renderFigure();
+        }
         /* Swap front and back buffers */
         glfwSwapBuffers(window);
 
@@ -67,7 +83,9 @@ int main(void)
         glfwPollEvents();
     }
     openGLManager.initShaders();
-    triangolo.deleteFigure();
+    for (Figure* fig : figures) {
+        fig->deleteFigure();
+    }
     glfwTerminate();
     return 0;
 }

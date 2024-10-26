@@ -11,7 +11,7 @@ class Figure
 {
 public:
     virtual void initFigure() = 0;  // Pure virtual function
-    virtual void renderFigure() = 0;       // Pure virtual function for rendering
+    void renderFigure();    
     void deleteFigure();
 protected:
     GLuint VAO;                      // Identifier for the Vertex Array Object (VAO)
@@ -20,7 +20,7 @@ protected:
     int nTriangles;                  // Number of triangles constituting the object
     vector<vec3> vertices;           // Vector containing the coordinates of the object's vertices (each element is a vec3)
     vector<vec4> colors;             // Vector containing the colors of the object's vertices (each element is a vec4)
-    int nv;                          // Number of vertices in the geometric figure
+    int numberOfVertices;            // Number of vertices in the geometric figure
     GLenum renderMode;               // Specifies how vertices should be interpreted during rendering
     void initVAO();                  // Function to initialize the VAO
 };
@@ -28,8 +28,43 @@ protected:
 class Triangle : public Figure
 {
 public:
+    Triangle();
     void initFigure() override;
-    void renderFigure() override;
+};
+
+
+class Circle : public Figure
+{
+private:
+    float centerX, centerY;
+    float radiusX, radiusY;
+    float scaleSize;
+public:
+    Circle(float cx, float cy, float rx, float ry, unsigned int numberOfTriangles, float scaleSize=1.0f);
+    void initFigure() override;
+};
+
+class Butterfly : public Figure
+{
+private:
+    float centerX, centerY;
+    float radiusX, radiusY;
+    float scaleSize;
+public:
+    Butterfly(float cx, float cy, float rx, float ry, unsigned int numberOfTriangles, float scaleSize=1.0f);
+    void initFigure() override;
+};
+
+
+class Heart : public Figure
+{
+private:
+    float centerX, centerY;
+    float radiusX, radiusY;
+    float scaleSize;
+public:
+    Heart(float cx, float cy, float rx, float ry, unsigned int numberOfTriangles, float scaleSize= 1.0f);
+    void initFigure() override;
 };
 
 
