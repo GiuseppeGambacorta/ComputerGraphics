@@ -134,7 +134,7 @@
     <ClCompile Include="Figures.cpp" />
     <ClCompile Include="OpenGL.cpp" />
     <ClCompile Include="ShaderMaker.cpp" />
-    <ClCompile Include="TriangleOpenGL.cpp" />
+    <ClCompile Include="programOpenGL.cpp" />
     <ClCompile Include="glad.c" />
   </ItemGroup>
   <ItemGroup>

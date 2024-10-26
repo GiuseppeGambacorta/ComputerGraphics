@@ -27,7 +27,7 @@
     <ClCompile Include="ShaderMaker.cpp">
       <Filter>Resource Files</Filter>
     </ClCompile>
-    <ClCompile Include="TriangleOpenGL.cpp">
+    <ClCompile Include="programOpenGL.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="Figures.cpp">

@@ -41,10 +41,10 @@ void Figure::initVAO() {
 
     
     areaSize = this->colors.size() * sizeof(vec4); 
-    vec4* startAreaPointer = this->colors.data(); 
+    vec4* startAreaPointerColors = this->colors.data(); 
 
     // Allocate and initialize buffer data for colors
-    glBufferData(GL_ARRAY_BUFFER, areaSize, startAreaPointer, GL_STATIC_DRAW);
+    glBufferData(GL_ARRAY_BUFFER, areaSize, startAreaPointerColors, GL_STATIC_DRAW);
 
     // Load the color VBO into layout index 1
     glVertexAttribPointer(1, 4, GL_FLOAT, GL_FALSE, 0, (void*)0); // Specify layout for color attributes
