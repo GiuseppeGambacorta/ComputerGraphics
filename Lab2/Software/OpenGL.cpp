@@ -1,5 +1,6 @@
 #include "OpenGL.h"
-#include "callbacks.h"
+#include "Callbacks.h"
+#include "ShaderMaker.h"
 
 int OpenGLManager::initOpenGL()
 {
@@ -62,4 +63,21 @@ void OpenGLManager::setCallbacks()
 
     // Window resize
     glfwSetFramebufferSizeCallback(this->window, framebuffer_size_callback);
+}
+
+
+void OpenGLManager::initShaders()
+{
+    GLenum ErrorCheckValue = glGetError();
+
+    char* vertexShader = (char*)"vertexShaderc.glsl";
+    char* fragmentShader = (char*)"fragmentShaderc.glsl";
+
+    this->programId = ShaderMaker::createProgram(vertexShader, fragmentShader);
+    glUseProgram(this->programId);
+
+}
+
+void OpenGLManager::deleteProgram() {
+    glDeleteProgram(this->programId);
 }

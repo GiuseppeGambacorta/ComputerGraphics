@@ -12,6 +12,9 @@ public:
 	 GLFWwindow* getWindow(int width, int height,const char* title);
 	 int gladLoad();
 	 void setCallbacks();
+	 void initShaders();
+	 void deleteProgram();
 private:
 	GLFWwindow* window;
+	GLuint programId;
 };

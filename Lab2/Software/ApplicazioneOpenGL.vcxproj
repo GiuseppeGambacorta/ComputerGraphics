@@ -130,19 +130,21 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="callbacks.cpp" />
+    <ClCompile Include="Callbacks.cpp" />
+    <ClCompile Include="Figures.cpp" />
     <ClCompile Include="OpenGL.cpp" />
     <ClCompile Include="ShaderMaker.cpp" />
     <ClCompile Include="TriangleOpenGL.cpp" />
     <ClCompile Include="glad.c" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="fragment_shader_PT.glsl" />
+    <None Include="vertexShaderc.glsl" />
     <None Include="packages.config" />
-    <None Include="vertex_shader_PT.glsl" />
+    <None Include="fragmentShaderc.glsl" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="callbacks.h" />
+    <ClInclude Include="Callbacks.h" />
+    <ClInclude Include="Figures.h" />
     <ClInclude Include="OpenGL.h" />
     <ClInclude Include="ShaderMaker.h" />
   </ItemGroup>
