@@ -24,6 +24,12 @@
     <ClCompile Include="ShaderMaker.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="callbacks.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="OpenGL.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <None Include="vertex_shader_PT.glsl">
@@ -36,6 +42,12 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="ShaderMaker.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="callbacks.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="OpenGL.h">
       <Filter>Source Files</Filter>
     </ClInclude>
   </ItemGroup>

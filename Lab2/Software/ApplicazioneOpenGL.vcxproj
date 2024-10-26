@@ -130,6 +130,8 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="callbacks.cpp" />
+    <ClCompile Include="OpenGL.cpp" />
     <ClCompile Include="ShaderMaker.cpp" />
     <ClCompile Include="TriangleOpenGL.cpp" />
     <ClCompile Include="glad.c" />
@@ -140,6 +142,8 @@
     <None Include="vertex_shader_PT.glsl" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="callbacks.h" />
+    <ClInclude Include="OpenGL.h" />
     <ClInclude Include="ShaderMaker.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
