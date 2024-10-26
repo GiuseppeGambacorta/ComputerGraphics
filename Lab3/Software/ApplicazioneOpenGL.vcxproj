@@ -130,25 +130,23 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <None Include="fragmentShaderC.glsl" />
-    <None Include="packages.config" />
-    <None Include="vertexShaderC.glsl" />
-  </ItemGroup>
-  <ItemGroup>
-    <ClCompile Include="Esercitazione2_Soluzione_3_differenti_moduli.cpp" />
-    <ClCompile Include="gestione_interazioni.cpp" />
-    <ClCompile Include="glad.c" />
-    <ClCompile Include="init_geometrie.cpp" />
-    <ClCompile Include="inizializzazioni.cpp" />
+    <ClCompile Include="Callbacks.cpp" />
+    <ClCompile Include="Figures.cpp" />
+    <ClCompile Include="OpenGL.cpp" />
     <ClCompile Include="ShaderMaker.cpp" />
+    <ClCompile Include="TriangleOpenGL.cpp" />
+    <ClCompile Include="glad.c" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="gestione_interazioni.h" />
-    <ClInclude Include="init_geometrie.h" />
-    <ClInclude Include="inizializzazioni.h" />
-    <ClInclude Include="lib.h" />
+    <None Include="vertexShaderc.glsl" />
+    <None Include="packages.config" />
+    <None Include="fragmentShaderc.glsl" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="Callbacks.h" />
+    <ClInclude Include="Figures.h" />
+    <ClInclude Include="OpenGL.h" />
     <ClInclude Include="ShaderMaker.h" />
-    <ClInclude Include="strutture.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
