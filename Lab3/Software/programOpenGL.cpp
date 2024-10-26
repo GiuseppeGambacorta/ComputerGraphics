@@ -23,7 +23,8 @@ Triangle triangle;
 Circle circle(0.0, 0.0, 0.1, 0.1, 300);
 Butterfly butterfly(0.3, 0.5, 0.1, 0.1, 300,1.0);
 Heart heart(0.5, 0.5, 0.1, 0.1, 300, 0.1);
-vector<Figure*> figures;
+vector<Figure*> staticFigures;
+vector<Figure*> dynamicFigures;
 
 OpenGLManager openGLManager;
 GLFWwindow* window;
@@ -51,15 +52,21 @@ int main(void)
     openGLManager.setCallbacks();
     openGLManager.initShaders();
 
-    figures.push_back(&triangle);
-    figures.push_back(&circle);
-    figures.push_back(&butterfly);
-    figures.push_back(&heart);
-
+    staticFigures.push_back(&triangle);
+    staticFigures.push_back(&circle);
+    staticFigures.push_back(&butterfly);
+    
+    dynamicFigures.push_back(&heart);
   
-    for (Figure* fig : figures) {
-        fig->initFigure();
+    for (Figure* fig : staticFigures) {
+        fig->initFigure(GL_STATIC_DRAW);
     }
+
+    for (Figure* fig : dynamicFigures) {
+        fig->initFigure(GL_DYNAMIC_DRAW);
+    }
+
+
 
 
     glEnable(GL_BLEND);
@@ -73,7 +80,12 @@ int main(void)
         glClearColor(r, g, b, 1.0f); // Set background color for the frame, colors must be in 0,1 range
         glClear(GL_COLOR_BUFFER_BIT); // Clear color buffer with set background color
         
-        for (Figure* fig : figures) {
+        for (Figure* fig : staticFigures) {
+            fig->renderFigure();
+        }
+
+
+        for (Figure* fig : dynamicFigures) {
             fig->renderFigure();
         }
         /* Swap front and back buffers */
@@ -83,8 +95,11 @@ int main(void)
         glfwPollEvents();
     }
     openGLManager.initShaders();
-    for (Figure* fig : figures) {
+    for (Figure* fig : staticFigures) {
         fig->deleteFigure();
+    }
+    for (Figure* fig : dynamicFigures) {
+        fig->renderFigure();
     }
     glfwTerminate();
     return 0;

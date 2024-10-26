@@ -10,8 +10,8 @@ using namespace glm;
 class Figure
 {
 public:
-    virtual void initFigure() = 0;  // Pure virtual function
-    void renderFigure();    
+    virtual void initFigure(int TypeOfDraw) = 0;  // Pure virtual function
+    void renderFigure();
     void deleteFigure();
 protected:
     GLuint VAO;                      // Identifier for the Vertex Array Object (VAO)
@@ -23,13 +23,14 @@ protected:
     int numberOfVertices;            // Number of vertices in the geometric figure
     GLenum renderMode;               // Specifies how vertices should be interpreted during rendering
     void initVAO();                  // Function to initialize the VAO
+    void initDynamicVAO();
 };
 
 class Triangle : public Figure
 {
 public:
     Triangle();
-    void initFigure() override;
+    void initFigure(int TypeOfDraw) override;
 };
 
 
@@ -41,7 +42,7 @@ private:
     float scaleSize;
 public:
     Circle(float cx, float cy, float rx, float ry, unsigned int numberOfTriangles, float scaleSize=1.0f);
-    void initFigure() override;
+    void initFigure(int TypeOfDraw) override;
 };
 
 class Butterfly : public Figure
@@ -52,7 +53,7 @@ private:
     float scaleSize;
 public:
     Butterfly(float cx, float cy, float rx, float ry, unsigned int numberOfTriangles, float scaleSize=1.0f);
-    void initFigure() override;
+    void initFigure(int TypeOfDraw) override;
 };
 
 
@@ -64,7 +65,7 @@ private:
     float scaleSize;
 public:
     Heart(float cx, float cy, float rx, float ry, unsigned int numberOfTriangles, float scaleSize= 1.0f);
-    void initFigure() override;
+    void initFigure(int TypeOfDraw) override;
 };
 
 

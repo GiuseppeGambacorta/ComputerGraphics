@@ -51,8 +51,43 @@ glVertexAttribPointer(1, 4, GL_FLOAT, GL_FALSE, 0, (void*)0); // Specify layout 
 glEnableVertexAttribArray(1); // Enable the vertex attribute array at index 1
 }
 
-void Figure::initFigure() {
-    this->initVAO();
+
+void Figure::initDynamicVAO() {
+
+    glGenVertexArrays(1, &this->VAO);              
+    glBindVertexArray(this->VAO);                   
+   
+    glGenBuffers(1, &this->VBO_vertices);          
+    glBindBuffer(GL_ARRAY_BUFFER, this->VBO_vertices); 
+
+    int areaSize = this->vertices.size() * sizeof(vec3);
+    vec3* startAreaPointer = this->vertices.data();
+
+    glBufferData(GL_ARRAY_BUFFER, areaSize, startAreaPointer, GL_DYNAMIC_DRAW);
+
+    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 0, (void*)0);
+    glEnableVertexAttribArray(0); 
+
+    glGenBuffers(1, &this->VBO_colors); 
+    glBindBuffer(GL_ARRAY_BUFFER, this->VBO_colors); 
+
+    areaSize = this->colors.size() * sizeof(vec4);
+    vec4* startAreaPointerColors = this->colors.data();
+    
+    glBufferData(GL_ARRAY_BUFFER, areaSize, startAreaPointerColors, GL_DYNAMIC_DRAW);
+
+    glVertexAttribPointer(1, 4, GL_FLOAT, GL_FALSE, 0, (void*)0); 
+    glEnableVertexAttribArray(1); 
+}
+
+void Figure::initFigure(int TypeOfDraw) {
+    if (TypeOfDraw == GL_DYNAMIC_DRAW) {
+        this->initDynamicVAO();
+    }
+    else if (TypeOfDraw == GL_STATIC_DRAW) {
+        this->initVAO();
+    }
+
 }
 
 void Figure::deleteFigure() {
@@ -73,7 +108,7 @@ void Figure::renderFigure() {
 
 Triangle::Triangle() : Figure() {}
 
-void Triangle::initFigure() {
+void Triangle::initFigure(int typeOfDraw) {
     this->vertices.push_back(vec3(-0.5f, -0.5f, 0.0f));
     this->vertices.push_back(vec3(0.5f, -0.5f, 0.0f));
     this->vertices.push_back(vec3(0.0f, 0.5f, 0.0f));
@@ -84,7 +119,7 @@ void Triangle::initFigure() {
     this->numberOfVertices = 3;
     this->renderMode = GL_TRIANGLES;
 
-    Figure::initFigure();
+    Figure::initFigure(typeOfDraw);
 }
 
 
@@ -99,7 +134,7 @@ Circle::Circle(float cx, float cy, float rx, float ry, unsigned int numberOfTria
     this->nTriangles = numberOfTriangles;
 }
 
-void Circle::initFigure() {
+void Circle::initFigure(int typeOfDraw) {
     
     float t, xx, yy;
     float stepA = (2 * M_PI) / this->nTriangles; // Utilizza this->nTriangles per accedere al numero di triangoli
@@ -117,7 +152,7 @@ void Circle::initFigure() {
 
     this->numberOfVertices = this->vertices.size(); // Aggiorna il numero di vertici
     this->renderMode = GL_TRIANGLE_FAN; // Imposta il modo di rendering
-    Figure::initFigure(); // Chiama il metodo della classe base
+    Figure::initFigure(typeOfDraw); // Chiama il metodo della classe base
 }
 
 
@@ -134,7 +169,7 @@ Butterfly::Butterfly(float cx, float cy, float rx, float ry, unsigned int number
 }
 
 
-void Butterfly::initFigure() {
+void Butterfly::initFigure(int typeOfDraw) {
    
     float t, xx, yy;
     float stepA = (2 * M_PI) / this->nTriangles;
@@ -153,7 +188,7 @@ void Butterfly::initFigure() {
     }
     this->numberOfVertices = this->vertices.size();
     this->renderMode = GL_TRIANGLE_FAN;
-    Figure::initFigure();
+    Figure::initFigure(typeOfDraw);
 }
 
 
@@ -169,7 +204,7 @@ Heart::Heart(float cx, float cy, float rx, float ry, unsigned int numberOfTriang
 }
 
 
-void Heart::initFigure() {
+void Heart::initFigure(int typeOfDraw) {
     
     float t, xx, yy;
     float stepA = (2 * M_PI) / this->nTriangles;
@@ -188,7 +223,7 @@ void Heart::initFigure() {
     }
     this->numberOfVertices = this->vertices.size();
     this->renderMode = GL_TRIANGLE_FAN;
-    Figure::initFigure();
+    Figure::initFigure(typeOfDraw);
 
 }
 
