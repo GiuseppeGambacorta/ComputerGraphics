@@ -15,9 +15,11 @@ public:
 	 void initShaders();
 	 void enableColorBlending();
 	 void setProjectionMatrix(float width, float height);
+	 GLuint getModelMatrix();
 	 void deleteProgram();
 	 GLuint getProgramID();
 private:
 	GLFWwindow* window;
 	GLuint programId;
+	GLuint modelMatrix;
 };

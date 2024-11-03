@@ -10,9 +10,7 @@ int numRows = 6, numCols = 8;
 double mousex = 0.0f, mousey = 0.0f;
 
 
-
 vector<Figure*> staticFigures;
-
 OpenGLManager openGLManager;
 GLFWwindow* window;
 
@@ -41,9 +39,8 @@ int main(void)
     openGLManager.enableColorBlending();
 	openGLManager.setProjectionMatrix((float) width, (float) height);
 
-    GLuint MatModel = glGetUniformLocation(openGLManager.getProgramID(), "Model");
-    Butterfly butterfly(300);
-    Heart heart(300);
+    Butterfly butterfly(300, openGLManager.getModelMatrix());
+    Heart heart(300, openGLManager.getModelMatrix());
 
     staticFigures.push_back(&heart);
     staticFigures.push_back(&butterfly);
@@ -90,7 +87,7 @@ int main(void)
                         staticFigures.at(0)->Model = translate(staticFigures.at(0)->Model, vec3(finalX, finalY, 0.0));
                         staticFigures.at(0)->Model = scale(staticFigures.at(0)->Model, vec3(30.0*raggiox, 30.0*raggiox, 1.0));
 
-                        glUniformMatrix4fv(MatModel, 1, GL_FALSE, value_ptr(staticFigures.at(0)->Model));
+                        glUniformMatrix4fv(openGLManager.getModelMatrix(), 1, GL_FALSE, value_ptr(staticFigures.at(0)->Model));
                         staticFigures.at(0)->renderFigure();
                     }
                     else {
@@ -100,7 +97,7 @@ int main(void)
                         staticFigures.at(1)->Model = scale(staticFigures.at(1)->Model, vec3(30.0, 30.0, 1.0));
                         staticFigures.at(1)->Model = rotate(staticFigures.at(1)->Model, glm::radians(angolo), vec3(0.0, 0.0, 1.0));
 
-                        glUniformMatrix4fv(MatModel, 1, GL_FALSE, value_ptr(staticFigures.at(1)->Model));
+                        glUniformMatrix4fv(openGLManager.getModelMatrix(), 1, GL_FALSE, value_ptr(staticFigures.at(1)->Model));
                         staticFigures.at(1)->renderFigure();
                     }
                 }

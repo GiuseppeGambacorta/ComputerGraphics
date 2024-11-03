@@ -93,6 +93,14 @@ void OpenGLManager::setProjectionMatrix(float width, float height)
     glUniformMatrix4fv(MatProj, 1, GL_FALSE, value_ptr(Projection));
 }
 
+GLuint OpenGLManager::getModelMatrix()
+{   
+    if (this->modelMatrix == 0) {
+        this->modelMatrix = glGetUniformLocation(this->getProgramID(), "Model");
+    }
+    return  modelMatrix;
+}
+
 
 
 void OpenGLManager::deleteProgram() {

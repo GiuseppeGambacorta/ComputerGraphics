@@ -122,7 +122,7 @@ void Figure::normalizeVertices() {
     }
 }
 
-Triangle::Triangle() : Figure() {}
+Triangle::Triangle(unsigned int numberOfTriangles, GLuint matModel) : Figure(numberOfTriangles, MatModel) {}
 
 void Triangle::initFigure(int typeOfDraw) {
     this->vertices.push_back(vec3(-0.5f, -0.5f, 0.0f));
@@ -138,19 +138,16 @@ void Triangle::initFigure(int typeOfDraw) {
     Figure::initFigure(typeOfDraw);
 }
 
-Circle::Circle(unsigned int numberOfTriangles)
-    : Figure() {
-    this->nTriangles = numberOfTriangles;
-}
+Circle::Circle(unsigned int numberOfTriangles, GLuint matModel) : Figure(numberOfTriangles, MatModel) {}
 
 void Circle::initFigure(int typeOfDraw) {
     float t, xx, yy;
-    float stepA = (2 * M_PI) / this->nTriangles;
+    float stepA = (2 * M_PI) / this->NumberOfTriangles;
 
     this->vertices.push_back(vec3(0.0f, 0.0f, 0.0f)); // Centro del cerchio
     this->colors.push_back(vec4(0.0, 1.0, 1.0, 1.0)); // Colore del centro
 
-    for (unsigned int i = 0; i <= this->nTriangles; i++) {
+    for (unsigned int i = 0; i <= this->NumberOfTriangles; i++) {
         t = (float)i * stepA;
         xx = cos(t);
         yy = sin(t);
@@ -163,18 +160,15 @@ void Circle::initFigure(int typeOfDraw) {
     Figure::initFigure(typeOfDraw); // Chiama il metodo della classe base
 }
 
-Butterfly::Butterfly(unsigned int numberOfTriangles)
-    : Figure() {
-    this->nTriangles = numberOfTriangles;
-}
+Butterfly::Butterfly(unsigned int numberOfTriangles, GLuint matModel) : Figure(numberOfTriangles, MatModel) {}
 
 void Butterfly::initFigure(int typeOfDraw) {
     float t, xx, yy;
-    float stepA = (2 * M_PI) / this->nTriangles;
+    float stepA = (2 * M_PI) / this->NumberOfTriangles;
     this->vertices.push_back(vec3(0.0f, 0.0f, 0.0f)); // Centro della farfalla
     this->colors.push_back(vec4(1.0, 1.0, 1.0, 1.0));
 
-    for (unsigned int i = 0; i <= this->nTriangles; i++) {
+    for (unsigned int i = 0; i <= this->NumberOfTriangles; i++) {
         t = (float)i * stepA;
         xx =  (sin(t) * (exp(cos(t)) - 2 * cos(4 * t)) + pow(sin(t / 12), 5));
         yy =  (cos(t) * (exp(cos(t)) - 2 * cos(4 * t)) + pow(sin(t / 12), 5));
@@ -187,18 +181,16 @@ void Butterfly::initFigure(int typeOfDraw) {
     Figure::initFigure(typeOfDraw);
 }
 
-Heart::Heart(unsigned int numberOfTriangles)
-    : Figure(){
-    this->nTriangles = numberOfTriangles;
-}
+Heart::Heart(unsigned int numberOfTriangles, GLuint matModel) : Figure(numberOfTriangles, MatModel) {}
+
 
 void Heart::initFigure(int typeOfDraw) {
     float t, xx, yy;
-    float stepA = (2 * M_PI) / this->nTriangles;
+    float stepA = (2 * M_PI) / this->NumberOfTriangles;
     this->vertices.push_back(vec3(0.0f, 0.0f, 0.0f)); // Centro del cuore
     this->colors.push_back(vec4(1.0, 1.0, 1.0, 1.0));
 
-    for (unsigned int i = 0; i <= this->nTriangles; i++) {
+    for (unsigned int i = 0; i <= this->NumberOfTriangles; i++) {
         t = (float)i * stepA;
         xx =  (16 * pow(sin(t), 3));
         yy =  (13 * cos(t) - 5 * cos(2 * t) - 2 * cos(3 * t) - cos(4 * t));
@@ -214,14 +206,14 @@ void Heart::initFigure(int typeOfDraw) {
 void Heart::updateHeart() {
 
     float t, xx, yy;
-    float stepA = (2 * M_PI) / this->nTriangles;
+    float stepA = (2 * M_PI) / this->NumberOfTriangles;
 
     this->vertices.clear();  // Pulisce i vecchi vertici
     this->colors.clear();
     this->vertices.push_back(vec3(0.0f, 0.0f, 0.0f)); // Centro del cuore
     this->colors.push_back(vec4(1.0, 1.0, 1.0, 1.0));
 
-    for (unsigned int i = 0; i <= this->nTriangles; i++) {
+    for (unsigned int i = 0; i <= this->NumberOfTriangles; i++) {
         t = (float)i * stepA;
         xx = (16 * pow(sin(t), 3));
         yy = (13 * cos(t) - 5 * cos(2 * t) - 2 * cos(3 * t) - cos(4 * t));
