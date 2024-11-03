@@ -15,8 +15,8 @@ int height = 1200, width = 1200;
 int numRows = 6, numCols = 8;
 double mousex = 0.0f, mousey = 0.0f;
 
-Butterfly butterfly(0.0, 0.0, 0.1, 0.1, 300,1.0);
-Heart heart(0.0, 0.0, 0.1, 0.1, 300, 1.0);
+Butterfly butterfly(0.0, 0.0, 0.1, 0.1, 300);
+Heart heart(0.0, 0.0, 0.1, 0.1, 300);
 
 vector<Figure*> staticFigures;
 

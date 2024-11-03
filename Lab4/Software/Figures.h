@@ -42,9 +42,8 @@ class Circle : public Figure
 private:
     float centerX, centerY;
     float radiusX, radiusY;
-    float scaleSize;
 public:
-    Circle(float cx, float cy, float rx, float ry, unsigned int numberOfTriangles, float scaleSize=1.0f);
+    Circle(float cx, float cy, float rx, float ry, unsigned int numberOfTriangles);
     void initFigure(int TypeOfDraw) override;
 };
 
@@ -53,9 +52,8 @@ class Butterfly : public Figure
 private:
     float centerX, centerY;
     float radiusX, radiusY;
-    float scaleSize;
 public:
-    Butterfly(float cx, float cy, float rx, float ry, unsigned int numberOfTriangles, float scaleSize=1.0f);
+    Butterfly(float cx, float cy, float rx, float ry, unsigned int numberOfTriangles);
     void initFigure(int TypeOfDraw) override;
 };
 
@@ -65,11 +63,10 @@ class Heart : public Figure
 private:
     float centerX, centerY;
     float radiusX, radiusY;
-    float scaleSize;
 public:
-    Heart(float cx, float cy, float rx, float ry, unsigned int numberOfTriangles, float scaleSize= 1.0f);
+    Heart(float cx, float cy, float rx, float ry, unsigned int numberOfTriangles);
     void initFigure(int TypeOfDraw) override;
-    void updateHeart(float newScaleSize);
+    void updateHeart();
 };
 
 

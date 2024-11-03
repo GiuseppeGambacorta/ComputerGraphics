@@ -140,13 +140,12 @@ void Triangle::initFigure(int typeOfDraw) {
 }
 
 
-Circle::Circle(float cx, float cy, float rx, float ry, unsigned int numberOfTriangles, float scaleSize)
+Circle::Circle(float cx, float cy, float rx, float ry, unsigned int numberOfTriangles)
     : Figure()
     , centerX(cx)
     , centerY(cy)
     , radiusX(rx)
     , radiusY(ry)
-    , scaleSize(scaleSize)
 {
     this->nTriangles = numberOfTriangles;
 }
@@ -161,8 +160,8 @@ void Circle::initFigure(int typeOfDraw) {
     for (unsigned int i = 0; i <= this->nTriangles; i++)
     {
         t = (float)i * stepA;
-        xx = this->centerX +( this->radiusX * cos(t)) * this->scaleSize;
-        yy = this->centerY +( this->radiusY * sin(t)) * this->scaleSize;
+        xx = this->centerX +( this->radiusX * cos(t)) ;
+        yy = this->centerY +( this->radiusY * sin(t));
         this->vertices.push_back(vec3(xx, yy, 0.0)); // Aggiungi il vertice calcolato
         this->colors.push_back(vec4(0.0, 0.0, 1.0, 1.0)); // Colore dei vertici
     }
@@ -174,13 +173,12 @@ void Circle::initFigure(int typeOfDraw) {
 
 
 
-Butterfly::Butterfly(float cx, float cy, float rx, float ry, unsigned int numberOfTriangles, float scaleSize)
+Butterfly::Butterfly(float cx, float cy, float rx, float ry, unsigned int numberOfTriangles)
     : Figure()
     , centerX(cx)
     , centerY(cy)
     , radiusX(rx)
     , radiusY(ry)
-    , scaleSize(scaleSize)
 {
     this->nTriangles = numberOfTriangles;
 }
@@ -198,8 +196,8 @@ void Butterfly::initFigure(int typeOfDraw) {
     for (unsigned int i = 0; i <= this->nTriangles; i++)
     {
         t = (float)i * stepA;
-        xx = this->centerX + (this->radiusX * (sin(t) * (exp(cos(t)) - 2 * cos(4 * t)) + pow(sin(t / 12), 5))) * this->scaleSize;
-        yy = this->centerY + (this->radiusY * (cos(t) * (exp(cos(t)) - 2 * cos(4 * t)) + pow(sin(t / 12), 5)))* this->scaleSize;
+        xx = this->centerX + (this->radiusX * (sin(t) * (exp(cos(t)) - 2 * cos(4 * t)) + pow(sin(t / 12), 5)));
+        yy = this->centerY + (this->radiusY * (cos(t) * (exp(cos(t)) - 2 * cos(4 * t)) + pow(sin(t / 12), 5)));
         this->vertices.push_back(vec3(xx, yy, 0.0));
         this->colors.push_back(vec4(1.0, 0.5, 0.0, 1.0));
     }
@@ -209,13 +207,12 @@ void Butterfly::initFigure(int typeOfDraw) {
 }
 
 
-Heart::Heart(float cx, float cy, float rx, float ry, unsigned int numberOfTriangles, float scaleSize)
+Heart::Heart(float cx, float cy, float rx, float ry, unsigned int numberOfTriangles)
     : Figure()
     , centerX(cx)
     , centerY(cy)
     , radiusX(rx)
     , radiusY(ry)
-    , scaleSize(scaleSize)
 {
     this->nTriangles = numberOfTriangles;
 }
@@ -233,8 +230,8 @@ void Heart::initFigure(int typeOfDraw) {
     for (unsigned int i = 0; i <= this->nTriangles; i++)
     {
         t = (float)i * stepA;
-        xx = this->centerX + (this->radiusX * (16 * pow(sin(t), 3))) * this->scaleSize;
-        yy = this->centerY + (this->radiusY * ((13 * cos(t) - 5 * cos(2 * t) - 2 * cos(3 * t) - cos(4 * t)))) * this->scaleSize;
+        xx = this->centerX + (this->radiusX * (16 * pow(sin(t), 3)));
+        yy = this->centerY + (this->radiusY * ((13 * cos(t) - 5 * cos(2 * t) - 2 * cos(3 * t) - cos(4 * t))));
         this->vertices.push_back(vec3(xx, yy, 0.0));
         this->colors.push_back(vec4(1.0, 0.0, 0.0, 1.0));
     }
@@ -244,8 +241,7 @@ void Heart::initFigure(int typeOfDraw) {
 
 }
 
-void Heart::updateHeart(float newScaleSize) {
-    this->scaleSize = newScaleSize;
+void Heart::updateHeart() {
 
     float t, xx, yy;
     float stepA = (2 * M_PI) / this->nTriangles;
@@ -257,8 +253,8 @@ void Heart::updateHeart(float newScaleSize) {
 
     for (unsigned int i = 0; i <= this->nTriangles; i++) {
         t = (float)i * stepA;
-        xx = this->centerX + (this->radiusX * (16 * pow(sin(t), 3))) * this->scaleSize;
-        yy = this->centerY + (this->radiusY * (13 * cos(t) - 5 * cos(2 * t) - 2 * cos(3 * t) - cos(4 * t))) * this->scaleSize;
+        xx = this->centerX + (this->radiusX * (16 * pow(sin(t), 3)));
+        yy = this->centerY + (this->radiusY * (13 * cos(t) - 5 * cos(2 * t) - 2 * cos(3 * t) - cos(4 * t)));
         this->vertices.push_back(vec3(xx, yy, 0.0));
         
         this->colors.push_back(vec4(1.0, 0.0, 0.0, 1.0));
