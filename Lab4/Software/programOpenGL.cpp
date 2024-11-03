@@ -16,14 +16,14 @@ int numRows = 6, numCols = 8;
 double mousex = 0.0f, mousey = 0.0f;
 
 Butterfly butterfly(0.0, 0.0, 0.1, 0.1, 300,1.0);
-Heart heart(0.0, 0.0, 0.1, 0.1, 300, 0.1);
+Heart heart(0.0, 0.0, 0.1, 0.1, 300, 1.0);
 
 vector<Figure*> staticFigures;
 
 OpenGLManager openGLManager;
 GLFWwindow* window;
 
-mat4 Projection;
+
 GLuint MatProj, MatModel;
 
 int main(void)
@@ -49,16 +49,19 @@ int main(void)
     openGLManager.initShaders();
     openGLManager.enableColorBlending();
 
-    staticFigures.push_back(&butterfly);  
     staticFigures.push_back(&heart);
+    staticFigures.push_back(&butterfly);  
+    
   
     for (Figure* fig : staticFigures) {
         fig->initFigure(GL_STATIC_DRAW);
     }
 
     
-    Projection = ortho(0.0f, float(width), 0.0f, float(height));
+    mat4 Projection = ortho(0.0f, float(width), 0.0f, float(height)); //xmin, xmax, ymin, ymax
     MatProj = glGetUniformLocation(openGLManager.getProgramID(), "Projection");
+    glUniformMatrix4fv(MatProj, 1, GL_FALSE, value_ptr(Projection));
+
     MatModel = glGetUniformLocation(openGLManager.getProgramID(), "Model");
 
     float stepr = ((float)width) / (numCols);   //Passo sulle  riga
@@ -99,7 +102,6 @@ int main(void)
                     staticFigures.at(0)->Model = translate(staticFigures.at(0)->Model, vec3(x + mousex, y + mousey, 0.0));
                     staticFigures.at(0)->Model = scale(staticFigures.at(0)->Model, vec3(30.0 * raggiox, 30.0 * raggiox, 1.0));
 
-                    glUniformMatrix4fv(MatProj, 1, GL_FALSE, value_ptr(Projection));
                     glUniformMatrix4fv(MatModel, 1, GL_FALSE, value_ptr(staticFigures.at(0)->Model));
                
                     //Questa istruzione "lega" o "attiva" il Vertex Array Object (VAO) di ogni struttura di tipo Figura memorizzata nel vector Scena .
@@ -116,7 +118,7 @@ int main(void)
                     staticFigures.at(1)->Model = scale(staticFigures.at(1)->Model, vec3(150.0, 150.0, 1.0));
                     staticFigures.at(1)->Model = rotate(staticFigures.at(1)->Model, glm::radians(angolo), vec3(0.0, 0.0, 1.0));
 
-                    glUniformMatrix4fv(MatProj, 1, GL_FALSE, value_ptr(Projection));
+                 
                     glUniformMatrix4fv(MatModel, 1, GL_FALSE, value_ptr(staticFigures.at(1)->Model));
                   
                     //Questa istruzione "lega" o "attiva" il Vertex Array Object (VAO) di ogni struttura di tipo Figura memorizzata nel vector Scena .
