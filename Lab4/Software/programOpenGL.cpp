@@ -39,8 +39,8 @@ int main(void)
     openGLManager.enableColorBlending();
 	openGLManager.setProjectionMatrix((float) width, (float) height);
 
-    Butterfly butterfly(300, openGLManager.getModelMatrix());
-    Heart heart(300, openGLManager.getModelMatrix());
+    Butterfly butterfly(300);
+    Heart heart(300);
 
     staticFigures.push_back(&heart);
     staticFigures.push_back(&butterfly);
@@ -81,24 +81,25 @@ int main(void)
                     float finalX = x + mousex - (stepr * numCols) / 2.0f; // Sottrai l'offset della larghezza della griglia
                     float finalY = y + mousey + (stepc * numRows) / 2.0f; // Sottrai l'offset dell'altezza della griglia
 
+
                     if (i % 2 == 0) {
                         float raggiox = sin(currentTime * 2.0 * PI) * 0.25f + 0.75;
-                        staticFigures.at(0)->Model = mat4(1.0);
-                        staticFigures.at(0)->Model = translate(staticFigures.at(0)->Model, vec3(finalX, finalY, 0.0));
-                        staticFigures.at(0)->Model = scale(staticFigures.at(0)->Model, vec3(30.0*raggiox, 30.0*raggiox, 1.0));
+                       
+						Figure* figure = staticFigures.at(0);
 
-                        glUniformMatrix4fv(openGLManager.getModelMatrix(), 1, GL_FALSE, value_ptr(staticFigures.at(0)->Model));
-                        staticFigures.at(0)->renderFigure();
+                        figure->translateFigure(finalX, finalY, 0.0);
+                        figure->scaleFigure(30.0 * raggiox, 30.0 * raggiox, 1.0);       
+                        figure->renderFigure(openGLManager.getModelMatrix());
                     }
                     else {
                         angolo += 0.1;
-                        staticFigures.at(1)->Model = mat4(1.0);
-                        staticFigures.at(1)->Model = translate(staticFigures.at(1)->Model, vec3(finalX, finalY, 0.0));
-                        staticFigures.at(1)->Model = scale(staticFigures.at(1)->Model, vec3(30.0, 30.0, 1.0));
-                        staticFigures.at(1)->Model = rotate(staticFigures.at(1)->Model, glm::radians(angolo), vec3(0.0, 0.0, 1.0));
-
-                        glUniformMatrix4fv(openGLManager.getModelMatrix(), 1, GL_FALSE, value_ptr(staticFigures.at(1)->Model));
-                        staticFigures.at(1)->renderFigure();
+                        Figure* figure = staticFigures.at(1);
+                   
+                        figure->translateFigure(finalX, finalY, 0.0);
+                        figure->scaleFigure(30.0, 30.0, 1.0);
+                        figure->rotateFigure(angolo);
+                        cout << "Model Matrix: " << openGLManager.getModelMatrix() << endl;
+                        figure->renderFigure(openGLManager.getModelMatrix());
                     }
                 }
             }

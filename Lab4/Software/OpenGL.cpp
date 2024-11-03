@@ -98,6 +98,7 @@ GLuint OpenGLManager::getModelMatrix()
     if (this->modelMatrix == 0) {
         this->modelMatrix = glGetUniformLocation(this->getProgramID(), "Model");
     }
+
     return  modelMatrix;
 }
 
