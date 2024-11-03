@@ -14,6 +14,7 @@ public:
 	 void setCallbacks();
 	 void initShaders();
 	 void enableColorBlending();
+	 void setProjectionMatrix(float width, float height);
 	 void deleteProgram();
 	 GLuint getProgramID();
 private:

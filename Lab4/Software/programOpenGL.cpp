@@ -1,5 +1,4 @@
 #include "lib.h"
-#include "ShaderMaker.h"
 #include "OpenGL.h"
 #include "Callbacks.h"
 #include "Figures.h"
@@ -10,15 +9,14 @@ int height = 1200, width = 1200;
 int numRows = 6, numCols = 8;
 double mousex = 0.0f, mousey = 0.0f;
 
-Butterfly butterfly(300);
-Heart heart(300);
+
 
 vector<Figure*> staticFigures;
 
 OpenGLManager openGLManager;
 GLFWwindow* window;
 
-GLuint MatProj, MatModel;
+
 
 int main(void)
 {
@@ -41,6 +39,11 @@ int main(void)
     openGLManager.setCallbacks();
     openGLManager.initShaders();
     openGLManager.enableColorBlending();
+	openGLManager.setProjectionMatrix((float) width, (float) height);
+
+    GLuint MatModel = glGetUniformLocation(openGLManager.getProgramID(), "Model");
+    Butterfly butterfly(300);
+    Heart heart(300);
 
     staticFigures.push_back(&heart);
     staticFigures.push_back(&butterfly);
@@ -49,11 +52,9 @@ int main(void)
         fig->initFigure(GL_STATIC_DRAW);
     }
 
-    mat4 Projection = ortho(0.0f, float(width), 0.0f, float(height)); //xmin, xmax, ymin, ymax
-    MatProj = glGetUniformLocation(openGLManager.getProgramID(), "Projection");
-    glUniformMatrix4fv(MatProj, 1, GL_FALSE, value_ptr(Projection));
+    
 
-    MatModel = glGetUniformLocation(openGLManager.getProgramID(), "Model");
+  
 
     float stepr = ((float)width) / (numCols);   // Passo sulle righe
     float stepc = ((float)height / 2.0) / (numRows); // Passo sulla colonna

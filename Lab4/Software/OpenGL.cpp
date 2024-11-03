@@ -1,6 +1,7 @@
 #include "OpenGL.h"
 #include "Callbacks.h"
 #include "ShaderMaker.h"
+#include "lib.h"
 
 int OpenGLManager::initOpenGL()
 {
@@ -72,6 +73,7 @@ void OpenGLManager::enableColorBlending()
 }
 
 
+
 void OpenGLManager::initShaders()
 {
     GLenum ErrorCheckValue = glGetError();
@@ -82,6 +84,13 @@ void OpenGLManager::initShaders()
     this->programId = ShaderMaker::createProgram(vertexShader, fragmentShader);
     glUseProgram(this->programId);
 
+}
+
+void OpenGLManager::setProjectionMatrix(float width, float height)
+{
+    mat4 Projection = ortho(0.0f, width, 0.0f, height); //xmin, xmax, ymin, ymax
+    GLuint MatProj = glGetUniformLocation(this->getProgramID(), "Projection");
+    glUniformMatrix4fv(MatProj, 1, GL_FALSE, value_ptr(Projection));
 }
 
 

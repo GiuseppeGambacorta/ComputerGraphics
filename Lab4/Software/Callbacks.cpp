@@ -1,5 +1,6 @@
 #include "Callbacks.h"
 #include <iostream>
+#include "lib.h"
 extern double mousex;
 extern double mousey;
 extern int height, width;
