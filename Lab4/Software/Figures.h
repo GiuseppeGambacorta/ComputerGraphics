@@ -15,6 +15,7 @@ public:
     void deleteFigure();
     void updateFigure();
     mat4 Model;
+
 protected:
     GLuint VAO;                      // Identifier for the Vertex Array Object (VAO)
     GLuint VBO_vertices;             // Identifier for the Vertex Buffer Object (VBO) containing vertex coordinates
@@ -24,9 +25,10 @@ protected:
     vector<vec4> colors;             // Vector containing the colors of the object's vertices (each element is a vec4)
     int numberOfVertices;            // Number of vertices in the geometric figure
     GLenum renderMode;               // Specifies how vertices should be interpreted during rendering
-   
+
     void initVAO();                  // Function to initialize the VAO
     void initDynamicVAO();
+    void normalizeVertices();
 };
 
 class Triangle : public Figure
@@ -36,37 +38,24 @@ public:
     void initFigure(int TypeOfDraw) override;
 };
 
-
 class Circle : public Figure
 {
-private:
-    float centerX, centerY;
-    float radiusX, radiusY;
 public:
-    Circle(float cx, float cy, float rx, float ry, unsigned int numberOfTriangles);
+    Circle(unsigned int numberOfTriangles);
     void initFigure(int TypeOfDraw) override;
 };
 
 class Butterfly : public Figure
 {
-private:
-    float centerX, centerY;
-    float radiusX, radiusY;
 public:
-    Butterfly(float cx, float cy, float rx, float ry, unsigned int numberOfTriangles);
+    Butterfly(unsigned int numberOfTriangles);
     void initFigure(int TypeOfDraw) override;
 };
-
 
 class Heart : public Figure
 {
-private:
-    float centerX, centerY;
-    float radiusX, radiusY;
 public:
-    Heart(float cx, float cy, float rx, float ry, unsigned int numberOfTriangles);
+    Heart(unsigned int numberOfTriangles);
     void initFigure(int TypeOfDraw) override;
     void updateHeart();
 };
-
-

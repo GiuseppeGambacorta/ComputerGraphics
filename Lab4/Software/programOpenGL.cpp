@@ -1,34 +1,27 @@
-// Progetto1.cpp : Questo file contiene la funzione 'main', in cui inizia e termina l'esecuzione del programma.
-//
-
 #include "lib.h"
 #include "ShaderMaker.h"
-
 #include "OpenGL.h"
 #include "Callbacks.h"
 #include "Figures.h"
 #define PI 3.14159265358979323846
-
 
 float r = 0.0, g = 1.0, b = 0.0;
 int height = 1200, width = 1200;
 int numRows = 6, numCols = 8;
 double mousex = 0.0f, mousey = 0.0f;
 
-Butterfly butterfly(0.0, 0.0, 0.1, 0.1, 300);
-Heart heart(0.0, 0.0, 0.1, 0.1, 300);
+Butterfly butterfly(300);
+Heart heart(300);
 
 vector<Figure*> staticFigures;
 
 OpenGLManager openGLManager;
 GLFWwindow* window;
 
-
 GLuint MatProj, MatModel;
 
 int main(void)
 {
-    
     if (!openGLManager.initOpenGL()) {
         return -1;
     }
@@ -50,102 +43,77 @@ int main(void)
     openGLManager.enableColorBlending();
 
     staticFigures.push_back(&heart);
-    staticFigures.push_back(&butterfly);  
-    
-  
+    staticFigures.push_back(&butterfly);
+
     for (Figure* fig : staticFigures) {
         fig->initFigure(GL_STATIC_DRAW);
     }
 
-    
     mat4 Projection = ortho(0.0f, float(width), 0.0f, float(height)); //xmin, xmax, ymin, ymax
     MatProj = glGetUniformLocation(openGLManager.getProgramID(), "Projection");
     glUniformMatrix4fv(MatProj, 1, GL_FALSE, value_ptr(Projection));
 
     MatModel = glGetUniformLocation(openGLManager.getProgramID(), "Model");
 
-    float stepr = ((float)width) / (numCols);   //Passo sulle  riga
-    float stepc = ((float)height /2.0) / (numRows); //Passo sulla colonna
+    float stepr = ((float)width) / (numCols);   // Passo sulle righe
+    float stepc = ((float)height / 2.0) / (numRows); // Passo sulla colonna
     float x, y, angolo = 0.0f;
-    
-    float updateInterval = 0.05f; // 50 ms in secondi
+
     float lastUpdateTime = glfwGetTime();
-    /* Loop until the user closes the window (Ripeti il ciclo finché l'utente non chiude la finestra) */
+    float updateInterval = 1.0f / 60.0f; // 60 FPS
+
     while (!glfwWindowShouldClose(window))
     {
-
-        glClearColor(r, g, b, 1.0f); // Set background color for the frame, colors must be in 0,1 range
-        glClear(GL_COLOR_BUFFER_BIT); // Clear color buffer with set background color
-        
-
         float currentTime = glfwGetTime();
+        float deltaTime = currentTime - lastUpdateTime;
 
-        if (currentTime - lastUpdateTime >= updateInterval) {
-           
-
+        if (deltaTime >= updateInterval) {
             lastUpdateTime = currentTime; // Aggiorna il tempo dell'ultimo aggiornamento
-        }
 
-        for (unsigned int i = 0; i < numRows; ++i) {  //Ciclando sulle righe cambio la y
-            y = height - i * stepc - stepc / 2;
+            glClearColor(r, g, b, 1.0f); // Set background color for the frame
+            glClear(GL_COLOR_BUFFER_BIT); // Clear color buffer with set background color
 
-            for (unsigned int j = 0; j < numCols; ++j) {   //Ciclando sulle colonne cambio la x
+            for (unsigned int i = 0; i < numRows; ++i) {
+                y = height - i * stepc - stepc / 2;
 
-                x = j * (stepr)+stepr / 2;
+                for (unsigned int j = 0; j < numCols; ++j) {
+                    x = j * stepr + stepr / 2;
 
+                    // Calcola la posizione finale centrando la griglia sul mouse
+                    float finalX = x + mousex - (stepr * numCols) / 2.0f; // Sottrai l'offset della larghezza della griglia
+                    float finalY = y + mousey + (stepc * numRows) / 2.0f; // Sottrai l'offset dell'altezza della griglia
 
-                if (i % 2 == 0)
-                {
-                    float currentTime = glfwGetTime(); //fornisce il tempo trascorso in secondi 
-                    float raggiox = sin(currentTime * 2.0 * PI) * 0.25f + 0.75;
-                    staticFigures.at(0)->Model  = mat4(1.0);
-                    staticFigures.at(0)->Model = translate(staticFigures.at(0)->Model, vec3(x + mousex, y + mousey, 0.0));
-                    staticFigures.at(0)->Model = scale(staticFigures.at(0)->Model, vec3(30.0 * raggiox, 30.0 * raggiox, 1.0));
+                    if (i % 2 == 0) {
+                        float raggiox = sin(currentTime * 2.0 * PI) * 0.25f + 0.75;
+                        staticFigures.at(0)->Model = mat4(1.0);
+                        staticFigures.at(0)->Model = translate(staticFigures.at(0)->Model, vec3(finalX, finalY, 0.0));
+                        staticFigures.at(0)->Model = scale(staticFigures.at(0)->Model, vec3(30.0*raggiox, 30.0*raggiox, 1.0));
 
-                    glUniformMatrix4fv(MatModel, 1, GL_FALSE, value_ptr(staticFigures.at(0)->Model));
-               
-                    //Questa istruzione "lega" o "attiva" il Vertex Array Object (VAO) di ogni struttura di tipo Figura memorizzata nel vector Scena .
+                        glUniformMatrix4fv(MatModel, 1, GL_FALSE, value_ptr(staticFigures.at(0)->Model));
+                        staticFigures.at(0)->renderFigure();
+                    }
+                    else {
+                        angolo += 0.1;
+                        staticFigures.at(1)->Model = mat4(1.0);
+                        staticFigures.at(1)->Model = translate(staticFigures.at(1)->Model, vec3(finalX, finalY, 0.0));
+                        staticFigures.at(1)->Model = scale(staticFigures.at(1)->Model, vec3(30.0, 30.0, 1.0));
+                        staticFigures.at(1)->Model = rotate(staticFigures.at(1)->Model, glm::radians(angolo), vec3(0.0, 0.0, 1.0));
 
-                    staticFigures.at(0)->renderFigure();
-                    
-                }
-                else
-                {
-
-                    angolo = angolo + 0.1;
-                    staticFigures.at(1)->Model = mat4(1.0);
-                    staticFigures.at(1)->Model = translate(staticFigures.at(1)->Model, vec3(x + mousex, y + mousey, 0.0));
-                    staticFigures.at(1)->Model = scale(staticFigures.at(1)->Model, vec3(150.0, 150.0, 1.0));
-                    staticFigures.at(1)->Model = rotate(staticFigures.at(1)->Model, glm::radians(angolo), vec3(0.0, 0.0, 1.0));
-
-                 
-                    glUniformMatrix4fv(MatModel, 1, GL_FALSE, value_ptr(staticFigures.at(1)->Model));
-                  
-                    //Questa istruzione "lega" o "attiva" il Vertex Array Object (VAO) di ogni struttura di tipo Figura memorizzata nel vector Scena .
-
-                    staticFigures.at(1)->renderFigure();
+                        glUniformMatrix4fv(MatModel, 1, GL_FALSE, value_ptr(staticFigures.at(1)->Model));
+                        staticFigures.at(1)->renderFigure();
+                    }
                 }
             }
-
-
+            glfwSwapBuffers(window); // Swap front and back buffers
         }
 
-    
-
-        /* Swap front and back buffers */
-        glfwSwapBuffers(window);
-
-        /* Poll for and process events */
-        glfwPollEvents();
+        glfwPollEvents(); // Poll for and process events
     }
 
-
-    openGLManager.initShaders();
     for (Figure* fig : staticFigures) {
         fig->deleteFigure();
     }
-  
+
     glfwTerminate();
     return 0;
 }
-
