@@ -39,8 +39,8 @@ int main(void)
     openGLManager.enableColorBlending();
 	openGLManager.setProjectionMatrix((float) width, (float) height);
 
-    Butterfly butterfly(300);
-    Heart heart(300);
+    Butterfly butterfly(300, openGLManager.getModelMatrix());
+    Heart heart(300, openGLManager.getModelMatrix());
 
     staticFigures.push_back(&heart);
     staticFigures.push_back(&butterfly);
@@ -89,7 +89,7 @@ int main(void)
 
                         figure->translateFigure(finalX, finalY, 0.0);
                         figure->scaleFigure(30.0 * raggiox, 30.0 * raggiox, 1.0);       
-                        figure->renderFigure(openGLManager.getModelMatrix());
+                        figure->renderFigure();
                     }
                     else {
                         angolo += 0.1;
@@ -98,8 +98,7 @@ int main(void)
                         figure->translateFigure(finalX, finalY, 0.0);
                         figure->scaleFigure(30.0, 30.0, 1.0);
                         figure->rotateFigure(angolo);
-                        cout << "Model Matrix: " << openGLManager.getModelMatrix() << endl;
-                        figure->renderFigure(openGLManager.getModelMatrix());
+                        figure->renderFigure();
                     }
                 }
             }

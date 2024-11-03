@@ -72,14 +72,14 @@ void Figure::deleteFigure() {
     glDeleteVertexArrays(1, &this->VAO);
 }
 
-void Figure::renderFigure(GLuint matModel) {
-    glUniformMatrix4fv(matModel, 1, GL_FALSE, value_ptr(this->Model));
+void Figure::renderFigure() {
+    glUniformMatrix4fv(this->MatModel, 1, GL_FALSE, value_ptr(this->Model));
     glBindVertexArray(this->VAO);
     glDrawArrays(this->renderMode, 0, this->numberOfVertices);
     this->Model = mat4(1.0);
 }
 
-void Figure::updateFigure(GLuint matModel) {
+void Figure::updateFigure() {
     glBindVertexArray(this->VAO);
 
     glBindBuffer(GL_ARRAY_BUFFER, this->VBO_vertices);
@@ -90,7 +90,7 @@ void Figure::updateFigure(GLuint matModel) {
 
     glBindBuffer(GL_ARRAY_BUFFER, 0);
     glBindVertexArray(0);
-    renderFigure(matModel);
+    renderFigure();
 }
 
 
@@ -137,7 +137,7 @@ void Figure::rotateFigure(float angle) {
     this->Model = rotate(this->Model, glm::radians(angle), vec3(0.0, 0.0, 1.0));
 }
 
-Triangle::Triangle(unsigned int numberOfTriangles) : Figure(numberOfTriangles) {}
+Triangle::Triangle(unsigned int numberOfTriangles, GLuint matModel) : Figure(numberOfTriangles,matModel) {}
 
 void Triangle::initFigure(int typeOfDraw) {
     this->vertices.push_back(vec3(-0.5f, -0.5f, 0.0f));
@@ -153,7 +153,7 @@ void Triangle::initFigure(int typeOfDraw) {
     Figure::initFigure(typeOfDraw);
 }
 
-Circle::Circle(unsigned int numberOfTriangles) : Figure(numberOfTriangles) {}
+Circle::Circle(unsigned int numberOfTriangles, GLuint matModel) : Figure(numberOfTriangles, matModel) {}
 
 void Circle::initFigure(int typeOfDraw) {
     float t, xx, yy;
@@ -175,12 +175,12 @@ void Circle::initFigure(int typeOfDraw) {
     Figure::initFigure(typeOfDraw); // Chiama il metodo della classe base
 }
 
-Butterfly::Butterfly(unsigned int numberOfTriangles) : Figure(numberOfTriangles) {}
+Butterfly::Butterfly(unsigned int numberOfTriangles, GLuint matModel) : Figure(numberOfTriangles, matModel) {}
 
 void Butterfly::initFigure(int typeOfDraw) {
     float t, xx, yy;
     float stepA = (2 * M_PI) / this->NumberOfTriangles;
-    this->vertices.push_back(vec3(0.0f, 0.0f, 0.0f)); // Centro della farfalla
+    this->vertices.push_back(vec3(0.0f, 0.0f, 0.0f)); 
     this->colors.push_back(vec4(1.0, 1.0, 1.0, 1.0));
 
     for (unsigned int i = 0; i <= this->NumberOfTriangles; i++) {
@@ -196,7 +196,7 @@ void Butterfly::initFigure(int typeOfDraw) {
     Figure::initFigure(typeOfDraw);
 }
 
-Heart::Heart(unsigned int numberOfTriangles) : Figure(numberOfTriangles) {}
+Heart::Heart(unsigned int numberOfTriangles, GLuint matModel) : Figure(numberOfTriangles, matModel) {}
 
 
 void Heart::initFigure(int typeOfDraw) {

@@ -10,12 +10,12 @@ using namespace glm;
 class Figure
 {
 public:
-    Figure(unsigned int numberOfTriangles) :  NumberOfTriangles(numberOfTriangles) {}
+    Figure(unsigned int numberOfTriangles, GLuint matModel) :  NumberOfTriangles(numberOfTriangles), MatModel(matModel) {}
 
     virtual void initFigure(int TypeOfDraw) = 0;  // Pure virtual function
-    void renderFigure(GLuint MatModel);
+    void renderFigure();
     void deleteFigure();
-    void updateFigure(GLuint MatModel);
+    void updateFigure();
 
     void translateFigure(float x, float y, float z);
     void scaleFigure(float x, float y, float z);
@@ -32,7 +32,7 @@ protected:
     int numberOfVertices;            // Number of vertices in the geometric figure
     GLenum renderMode;               // Specifies how vertices should be interpreted during rendering
     mat4 Model;
- 
+    GLuint MatModel;
 
     void initVAO();                  // Function to initialize the VAO
     void initDynamicVAO();
@@ -42,27 +42,27 @@ protected:
 class Triangle : public Figure
 {
 public:
-    Triangle(unsigned int numberOfTriangles);       // Add MatModel to the constructor
+    Triangle(unsigned int numberOfTriangles, GLuint wewe);       // Add MatModel to the constructor
     void initFigure(int TypeOfDraw) override;
 };
 
 class Circle : public Figure
 {
 public:
-    Circle(unsigned int numberOfTriangles); // Add MatModel to the constructor
+    Circle(unsigned int numberOfTriangles, GLuint wewe); // Add MatModel to the constructor
     void initFigure(int TypeOfDraw) override;
 };
 
 class Butterfly : public Figure
 {
 public:
-    Butterfly(unsigned int numberOfTriangles); // Add MatModel to the constructor
+    Butterfly(unsigned int numberOfTriangles, GLuint wewe); // Add MatModel to the constructor
     void initFigure(int TypeOfDraw) override;
 };
 
 class Heart : public Figure
 {
 public:
-    Heart(unsigned int numberOfTriangles); // Add MatModel to the constructor
+    Heart(unsigned int numberOfTriangles, GLuint wewe); // Add MatModel to the constructor
     void initFigure(int TypeOfDraw) override;
 };
