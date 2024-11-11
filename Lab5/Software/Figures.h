@@ -26,6 +26,7 @@ public:
     void rotateFigure(float angle);
 
 	bool isColliding(Figure* otherFigure);
+    vec4 getCurrentPosition();
     vector<vec4> getBoundingBox();
 
 
@@ -43,6 +44,7 @@ protected:
     GLuint MatModel;
     mat4 Model;
     
+    vec4 center;
     vec4 min, max;
 	vec4 tempMin, tempMax;
 
@@ -53,6 +55,7 @@ protected:
     void normalizeVertices();
 	void findBoundingBox();
     void updateBoundingBox();
+    void updatePosition();
 
 };
 

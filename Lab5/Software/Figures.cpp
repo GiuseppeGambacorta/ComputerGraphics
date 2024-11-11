@@ -1,17 +1,18 @@
 #include "Figures.h"
 #include "lib.h"
-
+#define M_PI 3.14159265358979323846
 
 
 Figure::Figure(unsigned int numberOfTriangles, GLuint matModel) : NumberOfTriangles(numberOfTriangles), MatModel(matModel) {
 
     this->Model = mat4(1.0);
+    this->center = vec4(0.0, 0.0, 0.0, 0.0);
     this->min = vec4(0.0, 0.0, 0.0, 0.0);
     this->max = vec4(0.0, 0.0, 0.0, 0.0);
 	this->renderEnabled = true;
 }
 
-#define M_PI 3.14159265358979323846
+
 void Figure::initVAO() {
     glGenVertexArrays(1, &this->VAO);
     glBindVertexArray(this->VAO);
@@ -85,10 +86,12 @@ void Figure::deleteFigure() {
 
 void Figure::renderFigure() {
     updateBoundingBox();
+    updatePosition();
 	glUniformMatrix4fv(this->MatModel, 1, GL_FALSE, value_ptr(this->Model)); // charge the model matrix into the shader
     glBindVertexArray(this->VAO);
     glDrawArrays(this->renderMode, 0, this->numberOfVertices);
     this->Model = mat4(1.0);
+
 
 }
 
@@ -175,8 +178,14 @@ void Figure::rotateFigure(float angle) {
 void Figure::updateBoundingBox() {
 	this->tempMin = this->Model * this->min;
 	this->tempMax = this->Model * this->max;
- 
-    
+}
+
+void Figure::updatePosition() {
+	this->center = this->Model * vec4(0.0, 0.0, 0.0, 1.0);
+}
+
+vec4 Figure::getCurrentPosition() {
+	return this->center;
 }
 
 void Figure::findBoundingBox() {

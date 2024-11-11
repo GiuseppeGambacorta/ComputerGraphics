@@ -129,6 +129,14 @@ int main(void)
                 cout << projectileAngle * (PI / 180.0f) << " " << offsetx << endl;
                 projectile.translateFigure(currentWidth / 2 + offsetx, currentHeight / 10 + offsety, 0.0);
                 projectile.scaleFigure(baseScale, baseScale, 1.0);
+
+                // Controlla se il proiettile è fuori dalla scena
+                if (currentWidth / 2 + offsetx < 0 || currentWidth / 2 + offsetx > currentWidth ||
+                    currentHeight / 10 + offsety < 0 || currentHeight / 10 + offsety > currentHeight) {
+                    projectile.disableRendering();
+                    offsetx = 0;
+                    offsety = 0;
+                }
             }
 
 			
@@ -139,6 +147,7 @@ int main(void)
                     projectile.scaleFigure(baseScale, baseScale, 1.0);
                     projectileAngle = angolo;
                 }
+              
 				
             }
 
@@ -170,6 +179,10 @@ int main(void)
 				offsety = 0;
 				offsetx = 0;
 			}
+
+         
+
+			
 
 		
 
