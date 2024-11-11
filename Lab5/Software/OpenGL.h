@@ -19,12 +19,16 @@ public:
 	 mat4 getProjectionMatrix();
 	 GLuint getModelMatrix();
 
-	 void deleteProgram();
-	 GLuint getProgramID();
+	 void deletePrograms();
+	 GLuint getProgramID(unsigned int index);
+	 void useProgram(unsigned int index);
 private:
+  
 	GLFWwindow* window;
-	GLuint programId;
+	vector<GLuint> programs;
 	mat4 Projection;
 	GLuint MatProj;
 	GLuint modelMatrix;
+
+	GLuint compileShader(const char* shaderSource, GLenum shaderType);
 };

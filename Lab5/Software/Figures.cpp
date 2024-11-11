@@ -3,7 +3,7 @@
 
 
 
-Figure::Figure(unsigned int numberOfTriangles, GLuint matModel, mat4 Projection) : NumberOfTriangles(numberOfTriangles), MatModel(matModel), Projection(Projection) {
+Figure::Figure(unsigned int numberOfTriangles, GLuint matModel) : NumberOfTriangles(numberOfTriangles), MatModel(matModel) {
 
     this->Model = mat4(1.0);
     this->min = vec4(0.0, 0.0, 0.0, 0.0);
@@ -219,7 +219,7 @@ vector<vec4> Figure::getBoundingBox() {
     return boundingBox;
 }
 
-Triangle::Triangle(unsigned int numberOfTriangles, GLuint matModel, mat4 projection) : Figure(numberOfTriangles,matModel, projection) {}
+Triangle::Triangle(unsigned int numberOfTriangles, GLuint matModel) : Figure(numberOfTriangles,matModel) {}
 
 void Triangle::initFigure(int typeOfDraw) {
     this->vertices.push_back(vec3(-0.5f, -0.5f, 0.0f));
@@ -235,7 +235,7 @@ void Triangle::initFigure(int typeOfDraw) {
     Figure::initFigure(typeOfDraw);
 }
 
-Circle::Circle(unsigned int numberOfTriangles, GLuint matModel, mat4 projection) : Figure(numberOfTriangles, matModel, projection) {}
+Circle::Circle(unsigned int numberOfTriangles, GLuint matModel) : Figure(numberOfTriangles, matModel) {}
 
 void Circle::initFigure(int typeOfDraw) {
     float t, xx, yy;
@@ -257,7 +257,7 @@ void Circle::initFigure(int typeOfDraw) {
     Figure::initFigure(typeOfDraw); // Chiama il metodo della classe base
 }
 
-Butterfly::Butterfly(unsigned int numberOfTriangles, GLuint matModel, mat4 projection) : Figure(numberOfTriangles, matModel, projection) {}
+Butterfly::Butterfly(unsigned int numberOfTriangles, GLuint matModel) : Figure(numberOfTriangles, matModel) {}
 
 void Butterfly::initFigure(int typeOfDraw) {
     float t, xx, yy;
@@ -278,7 +278,7 @@ void Butterfly::initFigure(int typeOfDraw) {
     Figure::initFigure(typeOfDraw);
 }
 
-Heart::Heart(unsigned int numberOfTriangles, GLuint matModel, mat4 projection) : Figure(numberOfTriangles, matModel, projection) {}
+Heart::Heart(unsigned int numberOfTriangles, GLuint matModel) : Figure(numberOfTriangles, matModel) {}
 
 
 void Heart::initFigure(int typeOfDraw) {

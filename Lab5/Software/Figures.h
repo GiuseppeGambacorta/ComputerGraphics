@@ -10,7 +10,7 @@ using namespace glm;
 class Figure
 {
 public:
-    Figure(unsigned int numberOfTriangles, GLuint matModel, mat4 Projection);
+    Figure(unsigned int numberOfTriangles, GLuint matModel);
 
     virtual void initFigure(int TypeOfDraw) = 0;  // Pure virtual function
     void renderFigure();
@@ -36,7 +36,6 @@ protected:
     int numberOfVertices;            // Number of vertices in the geometric figure
     GLenum renderMode;               // Specifies how vertices should be interpreted during rendering
 
-	mat4 Projection;
     GLuint MatModel;
     mat4 Model;
     
@@ -53,27 +52,27 @@ protected:
 class Triangle : public Figure
 {
 public:
-    Triangle(unsigned int numberOfTriangles, GLuint MatModel, mat4 projection);       // Add MatModel to the constructor
+    Triangle(unsigned int numberOfTriangles, GLuint MatModel);       // Add MatModel to the constructor
     void initFigure(int TypeOfDraw) override;
 };
 
 class Circle : public Figure
 {
 public:
-    Circle(unsigned int numberOfTriangles, GLuint MatModel, mat4 projection); // Add MatModel to the constructor
+    Circle(unsigned int numberOfTriangles, GLuint MatModel); // Add MatModel to the constructor
     void initFigure(int TypeOfDraw) override;
 };
 
 class Butterfly : public Figure
 {
 public:
-    Butterfly(unsigned int numberOfTriangles, GLuint MatModel, mat4 projection); // Add MatModel to the constructor
+    Butterfly(unsigned int numberOfTriangles, GLuint MatModel); // Add MatModel to the constructor
     void initFigure(int TypeOfDraw) override;
 };
 
 class Heart : public Figure
 {
 public:
-    Heart(unsigned int numberOfTriangles, GLuint MatModel, mat4 projection); // Add MatModel to the constructor
+    Heart(unsigned int numberOfTriangles, GLuint MatModel); // Add MatModel to the constructor
     void initFigure(int TypeOfDraw) override;
 };

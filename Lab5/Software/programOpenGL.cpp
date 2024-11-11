@@ -35,10 +35,12 @@ int main(void)
     openGLManager.setCallbacks();
     openGLManager.initShaders();
     openGLManager.enableColorBlending();
+    openGLManager.useProgram(0);
+
     openGLManager.setProjectionMatrix((float)width, (float)height);
 
-    Butterfly butterfly(300, openGLManager.getModelMatrix(), openGLManager.getProjectionMatrix());
-    Heart heart(300, openGLManager.getModelMatrix(), openGLManager.getProjectionMatrix());
+    Butterfly butterfly(300, openGLManager.getModelMatrix());
+    Heart heart(300, openGLManager.getModelMatrix());
     staticFigures.push_back(&heart);
     staticFigures.push_back(&butterfly);
 
@@ -51,6 +53,7 @@ int main(void)
     float updateInterval = 1.0f / 20.0f;
     float offsetx = 0;
 
+
     while (!glfwWindowShouldClose(window))
     {
         float currentTime = glfwGetTime();
@@ -59,6 +62,10 @@ int main(void)
         if (deltaTime >= updateInterval) {
             lastUpdateTime = currentTime;
 
+
+			
+			openGLManager.useProgram(0);
+			
             // Ottieni le dimensioni correnti della finestra
             int currentWidth, currentHeight;
             glfwGetWindowSize(window, &currentWidth, &currentHeight);

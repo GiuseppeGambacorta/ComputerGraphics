@@ -2,6 +2,9 @@
 #include "Callbacks.h"
 #include "ShaderMaker.h"
 #include "lib.h"
+#include <fstream>
+#include <sstream>
+#include <iostream>
 
 int OpenGLManager::initOpenGL()
 {
@@ -73,24 +76,84 @@ void OpenGLManager::enableColorBlending()
 }
 
 
+GLuint OpenGLManager::compileShader(const char* shaderPath, GLenum shaderType)
+{
+    // Leggi il codice dello shader dal file
+    std::string shaderCode;
+    std::ifstream shaderFile(shaderPath, std::ios::in);
+    if (shaderFile.is_open()) {
+        std::stringstream sstr;
+        sstr << shaderFile.rdbuf();
+        shaderCode = sstr.str();
+        shaderFile.close();
+    }
+    else {
+        std::cerr << "Impossibile aprire il file shader: " << shaderPath << std::endl;
+        return 0;
+    }
+
+    // Compila lo shader
+    GLuint shaderID = glCreateShader(shaderType);
+    const char* shaderSource = shaderCode.c_str();
+    glShaderSource(shaderID, 1, &shaderSource, NULL);
+    glCompileShader(shaderID);
+
+    // Controlla gli errori di compilazione
+    GLint result = GL_FALSE;
+    int infoLogLength;
+    glGetShaderiv(shaderID, GL_COMPILE_STATUS, &result);
+    glGetShaderiv(shaderID, GL_INFO_LOG_LENGTH, &infoLogLength);
+    if (infoLogLength > 0) {
+        std::vector<char> shaderErrorMessage(infoLogLength + 1);
+        glGetShaderInfoLog(shaderID, infoLogLength, NULL, &shaderErrorMessage[0]);
+        std::cerr << &shaderErrorMessage[0] << std::endl;
+    }
+
+    return shaderID;
+}
+
+
 
 void OpenGLManager::initShaders()
 {
     GLenum ErrorCheckValue = glGetError();
 
-    char* vertexShader = (char*)"vertexShaderc.glsl";
-    char* fragmentShader = (char*)"fragmentShaderc.glsl";
+    // Compila il vertex shader una volta
+    GLuint vertexShaderID = compileShader("vertexShaderc.glsl", GL_VERTEX_SHADER);
 
-    this->programId = ShaderMaker::createProgram(vertexShader, fragmentShader);
-    glUseProgram(this->programId);
+    // Crea il primo programma shader
+    GLuint fragmentShaderID1 = compileShader("fragmentShaderc.glsl", GL_FRAGMENT_SHADER);
+    GLuint programID1 = glCreateProgram();
+    glAttachShader(programID1, vertexShaderID);
+    glAttachShader(programID1, fragmentShaderID1);
+    glLinkProgram(programID1);
+    this->programs.push_back(programID1);
 
+    // Crea il secondo programma shader
+    GLuint fragmentShaderID2 = compileShader("fragmentShaderSky_OK.glsl", GL_FRAGMENT_SHADER);
+    GLuint programID2 = glCreateProgram();
+    glAttachShader(programID2, vertexShaderID);
+    glAttachShader(programID2, fragmentShaderID2);
+    glLinkProgram(programID2);
+    this->programs.push_back(programID2);
+
+    // Elimina gli shader dopo averli collegati ai programmi
+    glDeleteShader(vertexShaderID);
+    glDeleteShader(fragmentShaderID1);
+    glDeleteShader(fragmentShaderID2);
 }
 
 void OpenGLManager::setProjectionMatrix(float width, float height)
 {
     this->Projection = ortho(0.0f, width, 0.0f, height); //xmin, xmax, ymin, ymax
-    this->MatProj = glGetUniformLocation(this->getProgramID(), "Projection");
-    glUniformMatrix4fv(MatProj, 1, GL_FALSE, value_ptr(this->Projection));
+
+	for (unsigned int i = 0; i < this->programs.size(); i++) {
+		glUseProgram(this->programs[i]);
+		this->MatProj = glGetUniformLocation(this->getProgramID(i), "Projection");
+		glUniformMatrix4fv(MatProj, 1, GL_FALSE, value_ptr(this->Projection));
+	}
+
+    
 }
 
 mat4 OpenGLManager::getProjectionMatrix()
@@ -102,7 +165,7 @@ mat4 OpenGLManager::getProjectionMatrix()
 GLuint OpenGLManager::getModelMatrix()
 {   
     if (this->modelMatrix == 0) {
-        this->modelMatrix = glGetUniformLocation(this->getProgramID(), "Model");
+        this->modelMatrix = glGetUniformLocation(this->getProgramID(0), "Model");
     }
 
     return  modelMatrix;
@@ -110,11 +173,25 @@ GLuint OpenGLManager::getModelMatrix()
 
 
 
-void OpenGLManager::deleteProgram() {
-    glDeleteProgram(this->programId);
+void OpenGLManager::deletePrograms() {
+	for (unsigned int i = 0; i < this->programs.size(); i++) {
+		glDeleteProgram(this->programs[i]);
+	}
 }
 
-GLuint OpenGLManager::getProgramID()
+GLuint OpenGLManager::getProgramID(unsigned int id)
 {
-    return this->programId;
+	if (id >= this->programs.size()) {
+		return 0;
+	}
+	return this->programs[id];
+    
+}
+
+void OpenGLManager::useProgram(unsigned int index)
+{
+	if (index >= this->programs.size()) {
+		return;
+	}
+	glUseProgram(this->programs[index]);
 }
