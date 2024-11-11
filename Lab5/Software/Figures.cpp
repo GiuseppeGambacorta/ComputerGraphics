@@ -8,6 +8,7 @@ Figure::Figure(unsigned int numberOfTriangles, GLuint matModel) : NumberOfTriang
     this->Model = mat4(1.0);
     this->min = vec4(0.0, 0.0, 0.0, 0.0);
     this->max = vec4(0.0, 0.0, 0.0, 0.0);
+	this->renderEnabled = true;
 }
 
 #define M_PI 3.14159265358979323846
@@ -105,6 +106,21 @@ void Figure::updateFigure() {
     renderFigure();
 }
 
+void Figure::enableRendering()
+{
+	this->renderEnabled = true;
+}
+
+void Figure::disableRendering()
+{
+    this->renderEnabled = false;
+}
+
+bool Figure::isRenderingEnabled()
+{
+    return this->renderEnabled;
+}
+
 
 void Figure::normalizeVertices() {
     if (vertices.empty()) return;
@@ -186,6 +202,11 @@ void Figure::findBoundingBox() {
 
 
 bool Figure::isColliding(Figure* otherFigure) {
+
+	if (!otherFigure->isRenderingEnabled() || !this->isRenderingEnabled()) {
+		return false;
+	}
+
     // Ottieni la bounding box trasformata di entrambe le figure
     vector<vec4> thisBoundingBox = this->getBoundingBox();
     vector<vec4> otherBoundingBox = otherFigure->getBoundingBox();

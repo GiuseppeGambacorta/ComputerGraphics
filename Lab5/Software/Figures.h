@@ -17,6 +17,10 @@ public:
     void deleteFigure();
     void updateFigure();
 
+    void enableRendering();
+    void disableRendering();
+	bool isRenderingEnabled();
+
     void translateFigure(float x, float y, float z);
     void scaleFigure(float x, float y, float z);
     void rotateFigure(float angle);
@@ -41,6 +45,8 @@ protected:
     
     vec4 min, max;
 	vec4 tempMin, tempMax;
+
+    bool renderEnabled;
 
     void initVAO();                  // Function to initialize the VAO
     void initDynamicVAO();

@@ -2,6 +2,7 @@
 #include "OpenGL.h"
 #include "Callbacks.h"
 #include "Figures.h"
+
 #define PI 3.14159265358979323846
 
 float r = 0.0, g = 1.0, b = 0.0;
@@ -10,6 +11,7 @@ double mousex = 0.0f, mousey = 0.0f;
 vector<Figure*> staticFigures;
 OpenGLManager openGLManager;
 GLFWwindow* window;
+float angolo = 90.0f;
 
 float calculateFigureScale(float windowWidth, float windowHeight) {
     float minDimension = std::min(windowWidth, windowHeight);
@@ -51,20 +53,25 @@ int main(void)
     Heart heart(300, openGLManager.getModelMatrix());
 	Rettangle background(300, openGLManager.getModelMatrix());
 	Rettangle player(300, openGLManager.getModelMatrix());
+    Circle projectile(300, openGLManager.getModelMatrix());
     staticFigures.push_back(&heart);
     staticFigures.push_back(&butterfly);
 	staticFigures.push_back(&background);
 	staticFigures.push_back(&player);
+	staticFigures.push_back(&projectile);
+
 
     for (Figure* fig : staticFigures) {
         fig->initFigure(GL_STATIC_DRAW);
     }
+    projectile.disableRendering();
 
-    float x, y, angolo = 0.0f;
+    float x, y= 0.0f;
     float lastUpdateTime = glfwGetTime();
     float updateInterval = 1.0f / 20.0f;
     float offsetx = 0;
-
+	float offsety = 0;
+    float  projectileAngle;
 
     while (!glfwWindowShouldClose(window))
     {
@@ -100,25 +107,69 @@ int main(void)
      
             
             Figure& butterfly = *staticFigures.at(1);
-            angolo += 0.1;
-            offsetx += 1.0;
-            butterfly.translateFigure(currentWidth / 2 - 200 + offsetx, currentHeight / 2, 0.0);
+         
+            
+            butterfly.translateFigure(currentWidth / 2 - 200, currentHeight / 2, 0.0);
             butterfly.scaleFigure(baseScale, baseScale, 1.0);
             //figure1->rotateFigure(angolo);
 
 
+                // Controlla lo stato dei tasti
+            if (glfwGetKey(window, GLFW_KEY_R) == GLFW_PRESS) {
+                angolo -= 1.0f;
+            }
+            if (glfwGetKey(window, GLFW_KEY_E) == GLFW_PRESS) {
+                angolo += 1.0f;
+            }
+
+
+            if (projectile.isRenderingEnabled()) {
+                offsetx += cos(projectileAngle * (PI / 180.0f)) * 10.0f;
+                offsety += sin(projectileAngle * (PI / 180.0f)) * 10.0f;
+                cout << projectileAngle * (PI / 180.0f) << " " << offsetx << endl;
+                projectile.translateFigure(currentWidth / 2 + offsetx, currentHeight / 10 + offsety, 0.0);
+                projectile.scaleFigure(baseScale, baseScale, 1.0);
+            }
+
+			
+            if (glfwGetKey(window, GLFW_KEY_SPACE) == GLFW_PRESS) {
+                if (!projectile.isRenderingEnabled()) {
+                    projectile.enableRendering();
+                    projectile.translateFigure(currentWidth / 2, currentHeight / 10, 0.0);
+                    projectile.scaleFigure(baseScale, baseScale, 1.0);
+                    projectileAngle = angolo;
+                }
+				
+            }
+
+	
 			Figure& player = *staticFigures.at(3);
 			player.translateFigure(currentWidth / 2, currentHeight / 10, 0.0);
 			player.scaleFigure(baseScale, baseScale, 1.0);
+			player.rotateFigure(angolo);
+		
   
-            heart.renderFigure();
-            butterfly.renderFigure();
-			player.renderFigure();
+			for (Figure* fig : staticFigures) {
+				if (fig->isRenderingEnabled()) {
+					fig->renderFigure();
+				}
+			}
 
+            
 
-            if (heart.isColliding(&butterfly)) {
-                std::cout << "Collision detected!" << std::endl;
+            if (projectile.isColliding(&heart)) {
+				projectile.disableRendering();
+                heart.disableRendering();
+                offsety = 0;
+				offsetx = 0;
             }
+
+			if (projectile.isColliding(&butterfly)) {
+				projectile.disableRendering();
+				butterfly.disableRendering();
+				offsety = 0;
+				offsetx = 0;
+			}
 
 		
 
