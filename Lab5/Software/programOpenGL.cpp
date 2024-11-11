@@ -5,8 +5,7 @@
 #define PI 3.14159265358979323846
 
 float r = 0.0, g = 1.0, b = 0.0;
-int height = 1200, width = 1200;
-int numRows = 6, numCols = 8;
+int height = 800, width = 800;
 double mousex = 0.0f, mousey = 0.0f;
 vector<Figure*> staticFigures;
 OpenGLManager openGLManager;
@@ -14,7 +13,7 @@ GLFWwindow* window;
 
 float calculateFigureScale(float windowWidth, float windowHeight) {
     float minDimension = std::min(windowWidth, windowHeight);
-    return minDimension / 40.0f;
+    return minDimension / 30.0f;
 }
 
 int main(void)
@@ -22,6 +21,15 @@ int main(void)
     if (!openGLManager.initOpenGL()) {
         return -1;
     }
+
+    const GLFWvidmode* mode = glfwGetVideoMode(glfwGetPrimaryMonitor());
+    int screenWidth = mode->width;
+    int screenHeight = mode->height;
+    width = screenHeight / 2;
+	height = screenWidth / 2;
+    glfwWindowHint(GLFW_RESIZABLE, GLFW_FALSE);
+
+
     window = openGLManager.getWindow(width, height, "Hello World");
     if (window == NULL) {
         std::cout << "Failed to create the window !" << std::endl;
@@ -41,10 +49,12 @@ int main(void)
 
     Butterfly butterfly(300, openGLManager.getModelMatrix());
     Heart heart(300, openGLManager.getModelMatrix());
-	Rettangle rettangle(300, openGLManager.getModelMatrix());
+	Rettangle background(300, openGLManager.getModelMatrix());
+	Rettangle player(300, openGLManager.getModelMatrix());
     staticFigures.push_back(&heart);
     staticFigures.push_back(&butterfly);
-	staticFigures.push_back(&rettangle);
+	staticFigures.push_back(&background);
+	staticFigures.push_back(&player);
 
     for (Figure* fig : staticFigures) {
         fig->initFigure(GL_STATIC_DRAW);
@@ -63,59 +73,50 @@ int main(void)
 
         if (deltaTime >= updateInterval) {
             lastUpdateTime = currentTime;
+            int currentWidth, currentHeight;
+            glfwGetWindowSize(window, &currentWidth, &currentHeight);
+            float baseScale = calculateFigureScale(currentWidth, currentHeight);
+
 
             openGLManager.useProgram(2);
 
-
             unsigned int vec_resS = glGetUniformLocation(openGLManager.getProgramID(2), "resolution");
             unsigned int loc_time = glGetUniformLocation(openGLManager.getProgramID(2), "time");
-            vec2 resolution = vec2(float(height), float(width));
+            vec2 resolution = vec2(float(currentWidth), float(currentHeight));
             glUniform2fv(vec_resS, 1, value_ptr(resolution));
             glUniform1f(loc_time, currentTime);
             
-            Figure* figure2 = staticFigures.at(2);
-            figure2->translateFigure(width / 2, height / 2, 0.0);
-            figure2->scaleFigure(width, height, 1.0);
-            figure2->renderFigure();
-
-
-        
+            Figure& Background = *staticFigures.at(2);
+            Background.translateFigure(currentWidth / 2, currentHeight / 2, 0.0);
+            Background.scaleFigure(currentWidth, currentHeight, 1.0);
+            Background.renderFigure();
 			
 			openGLManager.useProgram(0);
 			
-            // Ottieni le dimensioni correnti della finestra
-            int currentWidth, currentHeight;
-            glfwGetWindowSize(window, &currentWidth, &currentHeight);
-
-            // Calcola la scala basata sulla finestra
-            float baseScale = calculateFigureScale(currentWidth, currentHeight);
-
-           // glClearColor(r, g, b, 1.0f);
-            //glClear(GL_COLOR_BUFFER_BIT);
-
-            Figure* figure0 = staticFigures.at(0);
-            figure0->translateFigure(width / 2, height / 2, 0.0);
-            figure0->scaleFigure(baseScale, baseScale, 1.0);
+      
+            Figure& heart = *staticFigures.at(0);
+            heart.translateFigure(currentWidth / 2, currentHeight / 2, 0.0);
+            heart.scaleFigure(baseScale, baseScale, 1.0);
      
             
-
-            Figure* figure1 = staticFigures.at(1);
+            Figure& butterfly = *staticFigures.at(1);
             angolo += 0.1;
             offsetx += 1.0;
-            figure1->translateFigure(width / 2 - 200 + offsetx, height / 2, 0.0);
-            figure1->scaleFigure(baseScale, baseScale, 1.0);
+            butterfly.translateFigure(currentWidth / 2 - 200 + offsetx, currentHeight / 2, 0.0);
+            butterfly.scaleFigure(baseScale, baseScale, 1.0);
             //figure1->rotateFigure(angolo);
+
+
+			Figure& player = *staticFigures.at(3);
+			player.translateFigure(currentWidth / 2, currentHeight / 10, 0.0);
+			player.scaleFigure(baseScale, baseScale, 1.0);
   
-       
-			//std::cout << "Figure 0: " << figure1->getBoundingBox().at(0).x << " " << figure1->getBoundingBox().at(0).y << " " << figure1->getBoundingBox().at(1).x << " " << figure1->getBoundingBox().at(1).y << std::endl;
-          
-			
-
-            figure0->renderFigure();
-            figure1->renderFigure();
+            heart.renderFigure();
+            butterfly.renderFigure();
+			player.renderFigure();
 
 
-            if (figure0->isColliding(figure1)) {
+            if (heart.isColliding(&butterfly)) {
                 std::cout << "Collision detected!" << std::endl;
             }
 
