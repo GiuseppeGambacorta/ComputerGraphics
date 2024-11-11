@@ -5,7 +5,7 @@ layout (location = 0) in vec3 aPos;    // Vertex position
 layout(location = 1) in vec4 Color;    // Vertex color
 
 // Output color passed to the fragment shader
-out vec4 colore_frag;
+out vec4 ourColor;
 
 // Transformation matrices
 uniform mat4 Projection; // Projection matrix
@@ -17,7 +17,7 @@ void main()
      gl_Position = Projection*Model*vec4(aPos, 1.0); 
 
     // Passo il colore al fragment shader
-    colore_frag = Color;               
+    ourColor = Color;               
 }
 
 

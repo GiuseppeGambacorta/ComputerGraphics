@@ -130,17 +130,27 @@ void OpenGLManager::initShaders()
     this->programs.push_back(programID1);
 
     // Crea il secondo programma shader
-    GLuint fragmentShaderID2 = compileShader("fragmentShaderSky_OK.glsl", GL_FRAGMENT_SHADER);
+    GLuint fragmentShaderID2 = compileShader("fragmentShaderSf.glsl", GL_FRAGMENT_SHADER);
     GLuint programID2 = glCreateProgram();
     glAttachShader(programID2, vertexShaderID);
     glAttachShader(programID2, fragmentShaderID2);
     glLinkProgram(programID2);
     this->programs.push_back(programID2);
 
+
+	GLuint fragmentShaderID3 = compileShader("fragmentShaderSky_ok.glsl", GL_FRAGMENT_SHADER);
+	GLuint programID3 = glCreateProgram();
+	glAttachShader(programID3, vertexShaderID);
+	glAttachShader(programID3, fragmentShaderID3);
+	glLinkProgram(programID3);
+	this->programs.push_back(programID3);
+
+
     // Elimina gli shader dopo averli collegati ai programmi
     glDeleteShader(vertexShaderID);
     glDeleteShader(fragmentShaderID1);
     glDeleteShader(fragmentShaderID2);
+	glDeleteShader(fragmentShaderID3);
 }
 
 void OpenGLManager::setProjectionMatrix(float width, float height)
@@ -153,7 +163,7 @@ void OpenGLManager::setProjectionMatrix(float width, float height)
 		glUniformMatrix4fv(MatProj, 1, GL_FALSE, value_ptr(this->Projection));
 	}
 
-    
+   
 }
 
 mat4 OpenGLManager::getProjectionMatrix()

@@ -41,8 +41,10 @@ int main(void)
 
     Butterfly butterfly(300, openGLManager.getModelMatrix());
     Heart heart(300, openGLManager.getModelMatrix());
+	Rettangle rettangle(300, openGLManager.getModelMatrix());
     staticFigures.push_back(&heart);
     staticFigures.push_back(&butterfly);
+	staticFigures.push_back(&rettangle);
 
     for (Figure* fig : staticFigures) {
         fig->initFigure(GL_STATIC_DRAW);
@@ -62,7 +64,23 @@ int main(void)
         if (deltaTime >= updateInterval) {
             lastUpdateTime = currentTime;
 
+            openGLManager.useProgram(2);
 
+
+            unsigned int vec_resS = glGetUniformLocation(openGLManager.getProgramID(2), "resolution");
+            unsigned int loc_time = glGetUniformLocation(openGLManager.getProgramID(2), "time");
+            vec2 resolution = vec2(float(height), float(width));
+            glUniform2fv(vec_resS, 1, value_ptr(resolution));
+            glUniform1f(loc_time, currentTime);
+            
+            Figure* figure2 = staticFigures.at(2);
+            figure2->translateFigure(width / 2, height / 2, 0.0);
+            figure2->scaleFigure(width, height, 1.0);
+            figure2->updateBoundingBox();
+            figure2->renderFigure();
+
+
+        
 			
 			openGLManager.useProgram(0);
 			
@@ -73,8 +91,8 @@ int main(void)
             // Calcola la scala basata sulla finestra
             float baseScale = calculateFigureScale(currentWidth, currentHeight);
 
-            glClearColor(r, g, b, 1.0f);
-            glClear(GL_COLOR_BUFFER_BIT);
+           // glClearColor(r, g, b, 1.0f);
+            //glClear(GL_COLOR_BUFFER_BIT);
 
             Figure* figure0 = staticFigures.at(0);
             figure0->translateFigure(width / 2, height / 2, 0.0);
@@ -99,8 +117,12 @@ int main(void)
                 std::cout << "Collision detected!" << std::endl;
             }
 
+			
+
             figure0->renderFigure();
             figure1->renderFigure();
+
+		
 
             glfwSwapBuffers(window);
         }

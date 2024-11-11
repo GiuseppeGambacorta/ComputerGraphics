@@ -76,3 +76,11 @@ public:
     Heart(unsigned int numberOfTriangles, GLuint MatModel); // Add MatModel to the constructor
     void initFigure(int TypeOfDraw) override;
 };
+
+
+class Rettangle : public Figure
+{
+	public:
+	Rettangle(unsigned int numberOfTriangles, GLuint MatModel); // Add MatModel to the constructor
+	void initFigure(int TypeOfDraw) override;
+};

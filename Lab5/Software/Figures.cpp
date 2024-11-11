@@ -301,3 +301,36 @@ void Heart::initFigure(int typeOfDraw) {
 }
 
 
+Rettangle::Rettangle(unsigned int numberOfTriangles, GLuint matModel) : Figure(numberOfTriangles, matModel) {}
+
+void Rettangle::initFigure(int typeOfDraw) {
+ 
+ 
+
+
+    this->vertices.push_back(vec3(-1.0f, -1.0f, 0.0f));  // Vertice in basso a sinistra
+    this->vertices.push_back(vec3(0.5f, -0.5f, 0.0f));   // Vertice in basso a destra
+    this->vertices.push_back(vec3(-0.5f, 0.5f, 0.0f));    // Vertice in alto a destra
+    // Secondo triangolo
+    this->vertices.push_back(vec3(-0.5f, 0.5f, 0.0f));  // Vertice in basso a sinistra
+    this->vertices.push_back(vec3(0.5f, -0.5f, 0.0f));   // Vertice in alto a sinistra
+    this->vertices.push_back(vec3(0.5f, 0.5f, 0.0f));    // Vertice in alto a destra
+  
+
+
+
+    // Colori per tutti i 6 vertici
+    this->colors.push_back(vec4(1.0, 0.0, 0.0, 1.0));
+    this->colors.push_back(vec4(1.0, 0.0, 0.0, 1.0));
+    this->colors.push_back(vec4(1.0, 0.0, 0.0, 1.0));
+    this->colors.push_back(vec4(1.0, 0.0, 0.0, 1.0));
+    this->colors.push_back(vec4(0.0, 0.0, 1.0, 1.0));
+    this->colors.push_back(vec4(1.0, 1.0, 0.0, 1.0));
+
+    this->numberOfVertices = this->vertices.size();
+    this->renderMode = GL_TRIANGLES;
+
+    Figure::initFigure(typeOfDraw);
+}
+
+
