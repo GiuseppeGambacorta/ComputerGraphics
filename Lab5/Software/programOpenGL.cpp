@@ -76,7 +76,6 @@ int main(void)
             Figure* figure2 = staticFigures.at(2);
             figure2->translateFigure(width / 2, height / 2, 0.0);
             figure2->scaleFigure(width, height, 1.0);
-            figure2->updateBoundingBox();
             figure2->renderFigure();
 
 
@@ -106,21 +105,19 @@ int main(void)
             figure1->translateFigure(width / 2 - 200 + offsetx, height / 2, 0.0);
             figure1->scaleFigure(baseScale, baseScale, 1.0);
             //figure1->rotateFigure(angolo);
-        
-			figure0->updateBoundingBox();
-			figure1->updateBoundingBox();
+  
        
 			//std::cout << "Figure 0: " << figure1->getBoundingBox().at(0).x << " " << figure1->getBoundingBox().at(0).y << " " << figure1->getBoundingBox().at(1).x << " " << figure1->getBoundingBox().at(1).y << std::endl;
           
-
-            if (figure0->isColliding(figure1)) {
-                std::cout << "Collision detected!" << std::endl;
-            }
-
 			
 
             figure0->renderFigure();
             figure1->renderFigure();
+
+
+            if (figure0->isColliding(figure1)) {
+                std::cout << "Collision detected!" << std::endl;
+            }
 
 		
 

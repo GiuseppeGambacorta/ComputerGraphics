@@ -83,6 +83,7 @@ void Figure::deleteFigure() {
 }
 
 void Figure::renderFigure() {
+    updateBoundingBox();
 	glUniformMatrix4fv(this->MatModel, 1, GL_FALSE, value_ptr(this->Model)); // charge the model matrix into the shader
     glBindVertexArray(this->VAO);
     glDrawArrays(this->renderMode, 0, this->numberOfVertices);
@@ -139,29 +140,18 @@ void Figure::normalizeVertices() {
 
 void Figure::translateFigure(float x, float y, float z) {
     this->Model = translate(this->Model, vec3(x, y, z));
-   // cout << "Model: " << this->Model[3][0] << " " << this->Model[3][1] << std::endl;
-	//this->boundingBox[0].x += x;
-	//this->boundingBox[0].y += y;
-	//this->boundingBox[1].x += x;
-	//this->boundingBox[1].y += y;
-  //  updateBoundingBox();
-  
+
+
 }
 
 void Figure::scaleFigure(float x, float y, float z) {
     this->Model = scale(this->Model, vec3(x, y, z));
- //   cout << this->boundingBox[0].x << this->boundingBox[0].y << std::endl;
- //updateBoundingBox();
- //   cout << this->boundingBox[0].x << this->boundingBox[0].y << std::endl;
-//    cout << "x" << this->boundingBox[0].x << "y" << this->boundingBox[0].y << std::endl;
 
 }
 
 void Figure::rotateFigure(float angle) {
     this->Model = rotate(this->Model, glm::radians(angle), vec3(0.0, 0.0, 1.0));
-  //  cout << this->boundingBox[0].x << this->boundingBox[0].y << std::endl;
-  // updateBoundingBox();
-  //  cout << this->boundingBox[0].x << this->boundingBox[0].y << std::endl;
+
 
 }
 
@@ -169,7 +159,7 @@ void Figure::rotateFigure(float angle) {
 void Figure::updateBoundingBox() {
 	this->tempMin = this->Model * this->min;
 	this->tempMax = this->Model * this->max;
-    //cout << transformedMin.x << transformedMin.y << std::endl;
+ 
     
 }
 

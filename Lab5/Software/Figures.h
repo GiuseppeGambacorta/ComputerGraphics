@@ -23,7 +23,7 @@ public:
 
 	bool isColliding(Figure* otherFigure);
     vector<vec4> getBoundingBox();
-    void updateBoundingBox();
+
 
 
 protected:
@@ -46,6 +46,7 @@ protected:
     void initDynamicVAO();
     void normalizeVertices();
 	void findBoundingBox();
+    void updateBoundingBox();
 
 };
 
