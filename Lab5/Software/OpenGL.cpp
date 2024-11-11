@@ -88,10 +88,16 @@ void OpenGLManager::initShaders()
 
 void OpenGLManager::setProjectionMatrix(float width, float height)
 {
-    mat4 Projection = ortho(0.0f, width, 0.0f, height); //xmin, xmax, ymin, ymax
-    GLuint MatProj = glGetUniformLocation(this->getProgramID(), "Projection");
-    glUniformMatrix4fv(MatProj, 1, GL_FALSE, value_ptr(Projection));
+    this->Projection = ortho(0.0f, width, 0.0f, height); //xmin, xmax, ymin, ymax
+    this->MatProj = glGetUniformLocation(this->getProgramID(), "Projection");
+    glUniformMatrix4fv(MatProj, 1, GL_FALSE, value_ptr(this->Projection));
 }
+
+mat4 OpenGLManager::getProjectionMatrix()
+{
+	return this->Projection;
+}
+
 
 GLuint OpenGLManager::getModelMatrix()
 {   

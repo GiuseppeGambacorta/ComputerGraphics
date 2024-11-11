@@ -16,7 +16,7 @@ float calculateFigureScale(float windowWidth, float windowHeight) {
     float minDimension = std::min(windowWidth, windowHeight);
     return minDimension / 40.0f;
 }
-// ciao
+
 int main(void)
 {
     if (!openGLManager.initOpenGL()) {
@@ -37,8 +37,8 @@ int main(void)
     openGLManager.enableColorBlending();
     openGLManager.setProjectionMatrix((float)width, (float)height);
 
-    Butterfly butterfly(300, openGLManager.getModelMatrix());
-    Heart heart(300, openGLManager.getModelMatrix());
+    Butterfly butterfly(300, openGLManager.getModelMatrix(), openGLManager.getProjectionMatrix());
+    Heart heart(300, openGLManager.getModelMatrix(), openGLManager.getProjectionMatrix());
     staticFigures.push_back(&heart);
     staticFigures.push_back(&butterfly);
 
@@ -46,11 +46,10 @@ int main(void)
         fig->initFigure(GL_STATIC_DRAW);
     }
 
-    float stepr = ((float)width) / (numCols);
-    float stepc = ((float)height / 2.0) / (numRows);
     float x, y, angolo = 0.0f;
     float lastUpdateTime = glfwGetTime();
-    float updateInterval = 1.0f / 60.0f;
+    float updateInterval = 1.0f / 20.0f;
+    float offsetx = 0;
 
     while (!glfwWindowShouldClose(window))
     {
@@ -66,38 +65,35 @@ int main(void)
 
             // Calcola la scala basata sulla finestra
             float baseScale = calculateFigureScale(currentWidth, currentHeight);
-			std::cout << "Base scale: " << baseScale << std::endl;
 
             glClearColor(r, g, b, 1.0f);
             glClear(GL_COLOR_BUFFER_BIT);
 
-            stepr = ((float)currentWidth) / (numCols);
-            stepc = ((float)currentHeight / 2.0) / (numRows);
+            Figure* figure0 = staticFigures.at(0);
+            figure0->translateFigure(width / 2, height / 2, 0.0);
+            figure0->scaleFigure(baseScale, baseScale, 1.0);
+     
+            
 
-            for (unsigned int i = 0; i < numRows; ++i) {
-                y = currentHeight - i * stepc - stepc / 2;
-                for (unsigned int j = 0; j < numCols; ++j) {
-                    x = j * stepr + stepr / 2;
-                    float finalX = x + mousex - (stepr * numCols) / 2.0f;
-                    float finalY = y + mousey + (stepc * numRows) / 2.0f;
+            Figure* figure1 = staticFigures.at(1);
+            angolo += 0.1;
+            offsetx += 1.0;
+            figure1->translateFigure(width / 2 - 200 + offsetx, height / 2, 0.0);
+            figure1->scaleFigure(baseScale, baseScale, 1.0);
+            //figure1->rotateFigure(angolo);
+        
+			figure0->updateBoundingBox();
+			figure1->updateBoundingBox();
+       
+			//std::cout << "Figure 0: " << figure1->getBoundingBox().at(0).x << " " << figure1->getBoundingBox().at(0).y << " " << figure1->getBoundingBox().at(1).x << " " << figure1->getBoundingBox().at(1).y << std::endl;
+          
 
-                    if (i % 2 == 0) {
-                        float raggiox = sin(currentTime * 2.0 * PI) * 0.25f + 0.75f;
-                        Figure* figure = staticFigures.at(0);
-                        figure->translateFigure(finalX, finalY, 0.0);
-                        figure->scaleFigure(baseScale * raggiox, baseScale * raggiox, 1.0);
-                        figure->renderFigure();
-                    }
-                    else {
-                        angolo += 0.1;
-                        Figure* figure = staticFigures.at(1);
-                        figure->translateFigure(finalX, finalY, 0.0);
-                        figure->scaleFigure(baseScale, baseScale, 1.0);
-                        figure->rotateFigure(angolo);
-                        figure->renderFigure();
-                    }
-                }
+            if (figure0->isColliding(figure1)) {
+                std::cout << "Collision detected!" << std::endl;
             }
+
+            figure0->renderFigure();
+            figure1->renderFigure();
 
             glfwSwapBuffers(window);
         }

@@ -1,6 +1,15 @@
 #include "Figures.h"
 #include "lib.h"
 
+
+
+Figure::Figure(unsigned int numberOfTriangles, GLuint matModel, mat4 Projection) : NumberOfTriangles(numberOfTriangles), MatModel(matModel), Projection(Projection) {
+
+    this->Model = mat4(1.0);
+    this->min = vec4(0.0, 0.0, 0.0, 0.0);
+    this->max = vec4(0.0, 0.0, 0.0, 0.0);
+}
+
 #define M_PI 3.14159265358979323846
 void Figure::initVAO() {
     glGenVertexArrays(1, &this->VAO);
@@ -74,10 +83,11 @@ void Figure::deleteFigure() {
 }
 
 void Figure::renderFigure() {
-    glUniformMatrix4fv(this->MatModel, 1, GL_FALSE, value_ptr(this->Model));
+	glUniformMatrix4fv(this->MatModel, 1, GL_FALSE, value_ptr(this->Model)); // charge the model matrix into the shader
     glBindVertexArray(this->VAO);
     glDrawArrays(this->renderMode, 0, this->numberOfVertices);
     this->Model = mat4(1.0);
+
 }
 
 void Figure::updateFigure() {
@@ -125,19 +135,42 @@ void Figure::normalizeVertices() {
         }
     }
 
-
 }
 
 void Figure::translateFigure(float x, float y, float z) {
     this->Model = translate(this->Model, vec3(x, y, z));
+   // cout << "Model: " << this->Model[3][0] << " " << this->Model[3][1] << std::endl;
+	//this->boundingBox[0].x += x;
+	//this->boundingBox[0].y += y;
+	//this->boundingBox[1].x += x;
+	//this->boundingBox[1].y += y;
+  //  updateBoundingBox();
+  
 }
 
 void Figure::scaleFigure(float x, float y, float z) {
     this->Model = scale(this->Model, vec3(x, y, z));
+ //   cout << this->boundingBox[0].x << this->boundingBox[0].y << std::endl;
+ //updateBoundingBox();
+ //   cout << this->boundingBox[0].x << this->boundingBox[0].y << std::endl;
+//    cout << "x" << this->boundingBox[0].x << "y" << this->boundingBox[0].y << std::endl;
+
 }
 
 void Figure::rotateFigure(float angle) {
     this->Model = rotate(this->Model, glm::radians(angle), vec3(0.0, 0.0, 1.0));
+  //  cout << this->boundingBox[0].x << this->boundingBox[0].y << std::endl;
+  // updateBoundingBox();
+  //  cout << this->boundingBox[0].x << this->boundingBox[0].y << std::endl;
+
+}
+
+
+void Figure::updateBoundingBox() {
+	this->tempMin = this->Model * this->min;
+	this->tempMax = this->Model * this->max;
+    //cout << transformedMin.x << transformedMin.y << std::endl;
+    
 }
 
 void Figure::findBoundingBox() {
@@ -154,19 +187,39 @@ void Figure::findBoundingBox() {
         maxY = std::max(maxY, this->vertices[i].y);
     }
 
-    vec3 left = vec3(minX, minY, 0.0);
-    vec3 up = vec3(minY, maxY, 0.0);
-    vec3 right = vec3(maxX, maxY, 0.0);
-    vec3 down = vec3(minX, maxX, 0.0);
 
-    this->boundingVertices.push_back(left);
-    this->boundingVertices.push_back(up);
-    this->boundingVertices.push_back(right);
-    this->boundingVertices.push_back(down);
+	this->min = vec4(minX, minY, 0.0, 1.0);
+	this->max = vec4(maxX, maxY, 0.0, 1.0);
+
 
 }
 
-Triangle::Triangle(unsigned int numberOfTriangles, GLuint matModel) : Figure(numberOfTriangles,matModel) {}
+
+bool Figure::isColliding(Figure* otherFigure) {
+    // Ottieni la bounding box trasformata di entrambe le figure
+    vector<vec4> thisBoundingBox = this->getBoundingBox();
+    vector<vec4> otherBoundingBox = otherFigure->getBoundingBox();
+
+    vec4 thisMin = thisBoundingBox[0];
+    vec4 thisMax = thisBoundingBox[1];
+    vec4 otherMin = otherBoundingBox[0];
+    vec4 otherMax = otherBoundingBox[1];
+
+    // Controlla la collisione sugli assi X e Y
+    bool collisionX = thisMin.x <= otherMax.x && thisMax.x >= otherMin.x;
+    bool collisionY = thisMin.y <= otherMax.y && thisMax.y >= otherMin.y;
+
+    return collisionX && collisionY;
+}
+
+vector<vec4> Figure::getBoundingBox() {
+	vector<vec4> boundingBox;
+	boundingBox.push_back(this->tempMin);
+	boundingBox.push_back(this->tempMax);
+    return boundingBox;
+}
+
+Triangle::Triangle(unsigned int numberOfTriangles, GLuint matModel, mat4 projection) : Figure(numberOfTriangles,matModel, projection) {}
 
 void Triangle::initFigure(int typeOfDraw) {
     this->vertices.push_back(vec3(-0.5f, -0.5f, 0.0f));
@@ -182,7 +235,7 @@ void Triangle::initFigure(int typeOfDraw) {
     Figure::initFigure(typeOfDraw);
 }
 
-Circle::Circle(unsigned int numberOfTriangles, GLuint matModel) : Figure(numberOfTriangles, matModel) {}
+Circle::Circle(unsigned int numberOfTriangles, GLuint matModel, mat4 projection) : Figure(numberOfTriangles, matModel, projection) {}
 
 void Circle::initFigure(int typeOfDraw) {
     float t, xx, yy;
@@ -204,7 +257,7 @@ void Circle::initFigure(int typeOfDraw) {
     Figure::initFigure(typeOfDraw); // Chiama il metodo della classe base
 }
 
-Butterfly::Butterfly(unsigned int numberOfTriangles, GLuint matModel) : Figure(numberOfTriangles, matModel) {}
+Butterfly::Butterfly(unsigned int numberOfTriangles, GLuint matModel, mat4 projection) : Figure(numberOfTriangles, matModel, projection) {}
 
 void Butterfly::initFigure(int typeOfDraw) {
     float t, xx, yy;
@@ -225,7 +278,7 @@ void Butterfly::initFigure(int typeOfDraw) {
     Figure::initFigure(typeOfDraw);
 }
 
-Heart::Heart(unsigned int numberOfTriangles, GLuint matModel) : Figure(numberOfTriangles, matModel) {}
+Heart::Heart(unsigned int numberOfTriangles, GLuint matModel, mat4 projection) : Figure(numberOfTriangles, matModel, projection) {}
 
 
 void Heart::initFigure(int typeOfDraw) {

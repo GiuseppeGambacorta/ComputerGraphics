@@ -130,26 +130,43 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="Callbacks.cpp" />
-    <ClCompile Include="Figures.cpp" />
-    <ClCompile Include="OpenGL.cpp" />
-    <ClCompile Include="ShaderMaker.cpp" />
-    <ClCompile Include="programOpenGL.cpp" />
-    <ClCompile Include="glad.c" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="fragmentShaderSf.glsl" />
-    <None Include="fragmentShaderSky_OK.glsl" />
-    <None Include="vertexShaderc.glsl" />
+    <None Include="fragmentShaderM.glsl" />
     <None Include="packages.config" />
-    <None Include="fragmentShaderc.glsl" />
+    <None Include="vertexShaderM.glsl" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="Callbacks.h" />
-    <ClInclude Include="Figures.h" />
+    <ClCompile Include="geometria.cpp" />
+    <ClCompile Include="gestione_interazioni.cpp" />
+    <ClCompile Include="glad.c" />
+    <ClCompile Include="Gui.cpp" />
+    <ClCompile Include="ImGui\imgui.cpp" />
+    <ClCompile Include="ImGui\imgui_demo.cpp" />
+    <ClCompile Include="ImGui\imgui_draw.cpp" />
+    <ClCompile Include="ImGui\imgui_impl_glfw.cpp" />
+    <ClCompile Include="ImGui\imgui_impl_opengl3.cpp" />
+    <ClCompile Include="ImGui\imgui_tables.cpp" />
+    <ClCompile Include="ImGui\imgui_widgets.cpp" />
+    <ClCompile Include="inizializzazioni.cpp" />
+    <ClCompile Include="Progetto3D.cpp" />
+    <ClCompile Include="ShaderMaker.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="geometria.h" />
+    <ClInclude Include="gestione_interazioni.h" />
+    <ClInclude Include="Gui.h" />
+    <ClInclude Include="ImGui\imconfig.h" />
+    <ClInclude Include="ImGui\imgui.h" />
+    <ClInclude Include="ImGui\imgui_impl_glfw.h" />
+    <ClInclude Include="ImGui\imgui_impl_opengl3.h" />
+    <ClInclude Include="ImGui\imgui_impl_opengl3_loader.h" />
+    <ClInclude Include="ImGui\imgui_internal.h" />
+    <ClInclude Include="ImGui\imstb_rectpack.h" />
+    <ClInclude Include="ImGui\imstb_textedit.h" />
+    <ClInclude Include="ImGui\imstb_truetype.h" />
+    <ClInclude Include="inizializzazioni.h" />
     <ClInclude Include="lib.h" />
-    <ClInclude Include="OpenGL.h" />
     <ClInclude Include="ShaderMaker.h" />
+    <ClInclude Include="strutture.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

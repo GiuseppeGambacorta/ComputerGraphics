@@ -1,6 +1,7 @@
 #pragma once
 #include <glad/glad.h>
 #include <GLFW/glfw3.h>
+#include "lib.h"
 
 
 
@@ -15,11 +16,15 @@ public:
 	 void initShaders();
 	 void enableColorBlending();
 	 void setProjectionMatrix(float width, float height);
+	 mat4 getProjectionMatrix();
 	 GLuint getModelMatrix();
+
 	 void deleteProgram();
 	 GLuint getProgramID();
 private:
 	GLFWwindow* window;
 	GLuint programId;
+	mat4 Projection;
+	GLuint MatProj;
 	GLuint modelMatrix;
 };
