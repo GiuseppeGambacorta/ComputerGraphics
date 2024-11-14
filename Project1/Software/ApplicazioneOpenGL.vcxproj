@@ -148,6 +148,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Callbacks.h" />
+    <ClInclude Include="Colors.h" />
     <ClInclude Include="Figure.h" />
     <ClInclude Include="Figures.h" />
     <ClInclude Include="lib.h" />

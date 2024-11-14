@@ -55,7 +55,7 @@ int main(void)
 
 
     for (Figure* fig : staticFigures) {
-        fig->initFigure(GL_STATIC_DRAW);
+        fig->initFigure(GL_STATIC_DRAW, Colors::Blue);
     }
 
 
@@ -73,6 +73,7 @@ int main(void)
 
         if (deltaTime >= updateInterval) {
             lastUpdateTime = currentTime;
+
 			windowManager->updateWindowSize();
 			int currentWidth = windowManager->getScreenWidth();
 			int currentHeight = windowManager->getScreenHeight();
@@ -98,9 +99,10 @@ int main(void)
             Figure& heart = *staticFigures.at(0);
             heart.translateFigure(currentWidth / 2, currentHeight / 2, 0.0);
             heart.scaleFigure(baseScale, baseScale, 1.0);
-     
+            heart.setColor(Colors::Red);
             
             Figure& butterfly = *staticFigures.at(1);
+			
          
             
             butterfly.translateFigure(currentWidth / 2 - 200, currentHeight / 2, 0.0);

@@ -10,7 +10,7 @@ class Figure
 public:
     Figure(unsigned int numberOfTriangles, GLuint matModel);
 
-    virtual void initFigure(int TypeOfDraw) = 0;  // Pure virtual function
+    virtual void initFigure(int TypeOfDraw, vec4 color) = 0;  // Pure virtual function
     void renderFigure();
     void deleteFigure();
     void updateFigure();
@@ -26,6 +26,7 @@ public:
     bool isColliding(Figure* otherFigure);
     vec4 getCurrentPosition();
     vector<vec4> getBoundingBox();
+	void setColor(vec4 color);
 
 
 

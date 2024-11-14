@@ -3,7 +3,7 @@
 WindowManager::WindowManager( const char* title)
 {
     const GLFWvidmode* mode = glfwGetVideoMode(glfwGetPrimaryMonitor());
-    this->screenHeight = mode->width / 2;
+    this->screenHeight = mode->width / 2 - (mode->width * 0.1);
     this->screenWidth = mode->height / 2;
     glfwWindowHint(GLFW_RESIZABLE, GLFW_FALSE);
     this->window = glfwCreateWindow(screenWidth, screenHeight, title, NULL, NULL);

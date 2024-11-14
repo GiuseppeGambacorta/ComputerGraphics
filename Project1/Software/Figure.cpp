@@ -67,7 +67,7 @@ void Figure::initDynamicVAO() {
     glEnableVertexAttribArray(1);
 }
 
-void Figure::initFigure(int TypeOfDraw) {
+void Figure::initFigure(int TypeOfDraw, vec4 Color) {
     normalizeVertices();
     findBoundingBox();
     if (TypeOfDraw == GL_DYNAMIC_DRAW) {
@@ -91,7 +91,6 @@ void Figure::renderFigure() {
     glBindVertexArray(this->VAO);
     glDrawArrays(this->renderMode, 0, this->numberOfVertices);
     this->Model = mat4(1.0);
-
 
 }
 
@@ -171,7 +170,6 @@ void Figure::scaleFigure(float x, float y, float z) {
 void Figure::rotateFigure(float angle) {
     this->Model = rotate(this->Model, glm::radians(angle), vec3(0.0, 0.0, 1.0));
 
-
 }
 
 
@@ -206,7 +204,6 @@ void Figure::findBoundingBox() {
     this->min = vec4(minX, minY, 0.0, 1.0);
     this->max = vec4(maxX, maxY, 0.0, 1.0);
 
-
 }
 
 
@@ -237,4 +234,15 @@ vector<vec4> Figure::getBoundingBox() {
     boundingBox.push_back(this->tempMin);
     boundingBox.push_back(this->tempMax);
     return boundingBox;
+}
+
+void Figure::setColor(vec4 color)
+{
+	for (size_t i = 0; i < this->colors.size(); i++) {
+		this->colors[i] = color;
+	}
+
+    glBindBuffer(GL_ARRAY_BUFFER, this->VBO_colors);
+    glBufferSubData(GL_ARRAY_BUFFER, 0, this->colors.size() * sizeof(vec4), this->colors.data());
+    glBindBuffer(GL_ARRAY_BUFFER, 0);
 }
