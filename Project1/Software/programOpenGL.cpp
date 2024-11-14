@@ -61,6 +61,9 @@ int main(void)
 
 	staticFigures.push_back(&GameMap);
 	staticFigures.push_back(&LeftWall);
+	staticFigures.push_back(&RightWall);
+	staticFigures.push_back(&TopWall);
+	staticFigures.push_back(&BottomWall);
 
 
 
@@ -69,8 +72,12 @@ int main(void)
     }
 
 	GameMap.setColor(Colors::Black);
+    
     LeftWall.disableRendering();
-
+	RightWall.disableRendering();
+	TopWall.disableRendering();
+	BottomWall.disableRendering();
+    
 
     float x, y= 0.0f;
     float lastUpdateTime = glfwGetTime();
@@ -114,6 +121,15 @@ int main(void)
 
 			LeftWall.translateFigure(currentWidth*0.05, currentHeight / 2, 0.0);
 			LeftWall.scaleFigure(currentWidth*0.05, currentHeight * 0.5, 0.0);
+
+			RightWall.translateFigure(currentWidth*0.95, currentHeight / 2, 0.0);
+			RightWall.scaleFigure(currentWidth * 0.05, currentHeight * 0.5, 0.0);
+
+			TopWall.translateFigure(currentWidth / 2, currentHeight * 0.95, 0.0);
+			TopWall.scaleFigure(currentWidth * 0.4, currentHeight * 0.05, 0.0);
+
+			BottomWall.translateFigure(currentWidth / 2, currentHeight * 0.05, 0.0);
+			BottomWall.scaleFigure(currentWidth * 0.4, currentHeight * 0.05, 0.0);
 			
       
             Figure& heart = *staticFigures.at(0);
@@ -205,6 +221,19 @@ int main(void)
                 offsetx = 0;
             }
 
+			if (projectile.isColliding(&RightWall)) {
+				projectile.disableRendering();
+				offsety = 0;
+				offsetx = 0;
+			}
+
+            if (projectile.isColliding(&TopWall)) {
+                projectile.disableRendering();
+                offsety = 0;
+                offsetx = 0;
+            }
+
+			
          
 
 			
