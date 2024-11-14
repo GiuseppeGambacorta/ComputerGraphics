@@ -40,6 +40,16 @@ void Circle::initFigure(int typeOfDraw, glm::vec4 color) {
     Figure::initFigure(typeOfDraw,color); // Chiama il metodo della classe base
 }
 
+void Circle::findBoundingBox() {
+    float maxDistance = 0.0f;
+    for (const auto& vertex : vertices) {
+        float distance = length(vec3(vertex) - vec3(center));
+        maxDistance = std::max(maxDistance, distance);
+    }
+    this->min = vec4(-maxDistance, -maxDistance, 0.0, 1.0);
+    this->max = vec4(maxDistance, maxDistance, 0.0, 1.0);
+}
+
 Butterfly::Butterfly(unsigned int numberOfTriangles, GLuint matModel) : Figure(numberOfTriangles, matModel) {}
 
 void Butterfly::initFigure(int typeOfDraw, glm::vec4 color) {

@@ -56,7 +56,7 @@ protected:
     void initVAO();                  // Function to initialize the VAO
     void initDynamicVAO();
     void normalizeVertices();
-    void findBoundingBox();
+    virtual void findBoundingBox();
     void updateBoundingBox();
     void updatePosition();
     void renderFigure();

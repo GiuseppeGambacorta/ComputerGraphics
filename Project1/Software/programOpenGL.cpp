@@ -81,7 +81,7 @@ int main(void)
 
     float x, y= 0.0f;
     float lastUpdateTime = glfwGetTime();
-    float updateInterval = 1.0f / 20.0f;
+    float updateInterval = 1.0f / 60.0f;
     float offsetx = 0;
 	float offsety = 0;
     float  projectileAngle;

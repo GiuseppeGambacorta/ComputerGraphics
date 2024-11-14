@@ -12,11 +12,12 @@ public:
     void initFigure(int TypeOfDraw, vec4 color) override;
 };
 
-class Circle : public Figure
-{
+class Circle : public Figure {
 public:
-    Circle(unsigned int numberOfTriangles, GLuint MatModel); // Add MatModel to the constructor
+    Circle(unsigned int numberOfTriangles, GLuint MatModel);
     void initFigure(int TypeOfDraw, vec4 color) override;
+protected:
+    void findBoundingBox() override;
 };
 
 class Butterfly : public Figure
