@@ -5,9 +5,10 @@
 class ShaderMaker
 {
     public:
-		static GLuint createProgram(char* vertexfilename, char *fragmentfilename);
-		static char* readShaderSource(const char* shaderFile);
+		ShaderMaker() {}
+		static GLuint createProgram(const char* vertexfilename, const char *fragmentfilename);
+		static GLuint compileShader(const char* shaderFile, GLenum shaderType);
 	
     private:
-		ShaderMaker() { }	
+		
 };

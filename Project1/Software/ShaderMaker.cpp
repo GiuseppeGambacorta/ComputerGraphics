@@ -1,84 +1,59 @@
 
-#include <glad/glad.h>
-#include <GLFW/glfw3.h>
-#include <GL/gl.h>
+#include "lib.h"
 #include <iostream>
-#include "ShaderMaker.h"
+#include <fstream>
+#include <sstream>
+
  
 
-#pragma warning(disable:4996)
-char* ShaderMaker::readShaderSource(const char* shaderFile)
+GLuint ShaderMaker::compileShader(const char* shaderPath, GLenum shaderType)
 {
-	FILE* fp = fopen(shaderFile, "rb");
+	// Leggi il codice dello shader dal file
+	std::string shaderCode;
+	std::ifstream shaderFile(shaderPath, std::ios::in);
+	if (shaderFile.is_open()) {
+		std::stringstream sstr;
+		sstr << shaderFile.rdbuf();
+		shaderCode = sstr.str();
+		shaderFile.close();
+	}
+	else {
+		std::cerr << "Impossibile aprire il file shader: " << shaderPath << std::endl;
+		return 0;
+	}
 
-	if (fp == NULL) { return NULL; }
+	// Compila lo shader
+	GLuint shaderID = glCreateShader(shaderType);
+	const char* shaderSource = shaderCode.c_str();
+	glShaderSource(shaderID, 1, &shaderSource, NULL);
+	glCompileShader(shaderID);
 
-	fseek(fp, 0L, SEEK_END);
-	long size = ftell(fp);
+	// Controlla gli errori di compilazione
+	GLint result = GL_FALSE;
+	int infoLogLength;
+	glGetShaderiv(shaderID, GL_COMPILE_STATUS, &result);
+	glGetShaderiv(shaderID, GL_INFO_LOG_LENGTH, &infoLogLength);
+	if (infoLogLength > 0) {
+		std::vector<char> shaderErrorMessage(infoLogLength + 1);
+		glGetShaderInfoLog(shaderID, infoLogLength, NULL, &shaderErrorMessage[0]);
+		std::cerr << &shaderErrorMessage[0] << std::endl;
+	}
 
-	fseek(fp, 0L, SEEK_SET);
-	char* buf = new char[size + 1];
-	fread(buf, 1, size, fp);
-
-	buf[size] = '\0';
-	fclose(fp);
-
-	return buf;
+	return shaderID;
 }
 
-GLuint ShaderMaker::createProgram(char* vertexfilename, char *fragmentfilename)
+GLuint ShaderMaker::createProgram(const char* vertexfilename, const char *fragmentfilename)
 {
  
-	int success;
-	char infoLog[512];
+	// Compila il vertex shader una volta
+	GLuint vertexShaderID = compileShader(vertexfilename, GL_VERTEX_SHADER);
 
- 
-	// Creiamo gli eseguibili degli shader
-	//Leggiamo il codice del Vertex Shader
-	GLchar* VertexShader = readShaderSource(vertexfilename);
-	//Visualizzo sulla console il CODICE VERTEX SHADER
-	//cout << VertexShader;
-
-	//Generiamo un identificativo per il vertex shader
-	GLuint vertexShaderId = glCreateShader(GL_VERTEX_SHADER);
-	//Associamo all'identificativo il codice del vertex shader
-	glShaderSource(vertexShaderId, 1, (const char**)&VertexShader, NULL);
-	//Compiliamo il Vertex SHader
-	glCompileShader(vertexShaderId); 
+	// Crea il primo programma shader
+	GLuint fragmentShaderID1 = compileShader(fragmentfilename, GL_FRAGMENT_SHADER);
+	GLuint programID = glCreateProgram();
+	glAttachShader(programID, vertexShaderID);
+	glAttachShader(programID, fragmentShaderID1);
+	glLinkProgram(programID);
 	
-	glGetShaderiv(vertexShaderId, GL_COMPILE_STATUS, &success);
-	if (!success) {
-		glGetShaderInfoLog(vertexShaderId, 512, NULL, infoLog);
-		std::cout << "ERROR::SHADER::VERTEX::COMPILATION_FAILED\n" << infoLog << std::endl;
-	}
-
-
-
-	//Leggiamo il codice del Fragment Shader
-	const GLchar* FragmentShader = readShaderSource(fragmentfilename);
-	//Visualizzo sulla console il CODICE FRAGMENT SHADER
-	//cout << FragmentShader;
-
-	//Generiamo un identificativo per il FRAGMENT shader
-	GLuint fragmentShaderId = glCreateShader(GL_FRAGMENT_SHADER);
-	glShaderSource(fragmentShaderId, 1, (const char**)&FragmentShader, NULL);
-	//Compiliamo il FRAGMENT SHader
-	glCompileShader(fragmentShaderId);
-
-	 
-	glGetShaderiv(fragmentShaderId, GL_COMPILE_STATUS, &success);
-	if (!success) {
-		glGetShaderInfoLog(fragmentShaderId, 512, NULL, infoLog);
-		std::cout << "ERROR::SHADER::FRAGMENT::COMPILATION_FAILED\n" << infoLog << std::endl;
-	}
-
- 
-	//Creiamo un identificativo di un eseguibile e gli colleghiamo i due shader compilati
-	GLuint programId = glCreateProgram();
-
-	glAttachShader(programId, vertexShaderId);
-	glAttachShader(programId, fragmentShaderId);
-	glLinkProgram(programId);
-	
-	return programId;
+	return programID;
 }

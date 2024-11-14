@@ -2,9 +2,7 @@
 #include "Callbacks.h"
 #include "ShaderMaker.h"
 #include "lib.h"
-#include <fstream>
-#include <sstream>
-#include <iostream>
+
 
 int OpenGLManager::initOpenGL()
 {
@@ -76,81 +74,16 @@ void OpenGLManager::enableColorBlending()
 }
 
 
-GLuint OpenGLManager::compileShader(const char* shaderPath, GLenum shaderType)
-{
-    // Leggi il codice dello shader dal file
-    std::string shaderCode;
-    std::ifstream shaderFile(shaderPath, std::ios::in);
-    if (shaderFile.is_open()) {
-        std::stringstream sstr;
-        sstr << shaderFile.rdbuf();
-        shaderCode = sstr.str();
-        shaderFile.close();
-    }
-    else {
-        std::cerr << "Impossibile aprire il file shader: " << shaderPath << std::endl;
-        return 0;
-    }
 
-    // Compila lo shader
-    GLuint shaderID = glCreateShader(shaderType);
-    const char* shaderSource = shaderCode.c_str();
-    glShaderSource(shaderID, 1, &shaderSource, NULL);
-    glCompileShader(shaderID);
-
-    // Controlla gli errori di compilazione
-    GLint result = GL_FALSE;
-    int infoLogLength;
-    glGetShaderiv(shaderID, GL_COMPILE_STATUS, &result);
-    glGetShaderiv(shaderID, GL_INFO_LOG_LENGTH, &infoLogLength);
-    if (infoLogLength > 0) {
-        std::vector<char> shaderErrorMessage(infoLogLength + 1);
-        glGetShaderInfoLog(shaderID, infoLogLength, NULL, &shaderErrorMessage[0]);
-        std::cerr << &shaderErrorMessage[0] << std::endl;
-    }
-
-    return shaderID;
-}
 
 
 
 void OpenGLManager::initShaders()
 {
-    GLenum ErrorCheckValue = glGetError();
-
-    // Compila il vertex shader una volta
-    GLuint vertexShaderID = compileShader("vertexShaderc.glsl", GL_VERTEX_SHADER);
-
-    // Crea il primo programma shader
-    GLuint fragmentShaderID1 = compileShader("fragmentShaderc.glsl", GL_FRAGMENT_SHADER);
-    GLuint programID1 = glCreateProgram();
-    glAttachShader(programID1, vertexShaderID);
-    glAttachShader(programID1, fragmentShaderID1);
-    glLinkProgram(programID1);
-    this->programs.push_back(programID1);
-
-    // Crea il secondo programma shader
-    GLuint fragmentShaderID2 = compileShader("fragmentShaderSf.glsl", GL_FRAGMENT_SHADER);
-    GLuint programID2 = glCreateProgram();
-    glAttachShader(programID2, vertexShaderID);
-    glAttachShader(programID2, fragmentShaderID2);
-    glLinkProgram(programID2);
-    this->programs.push_back(programID2);
-
-
-	GLuint fragmentShaderID3 = compileShader("fragmentShaderSky_ok.glsl", GL_FRAGMENT_SHADER);
-	GLuint programID3 = glCreateProgram();
-	glAttachShader(programID3, vertexShaderID);
-	glAttachShader(programID3, fragmentShaderID3);
-	glLinkProgram(programID3);
-	this->programs.push_back(programID3);
-
-
-    // Elimina gli shader dopo averli collegati ai programmi
-    glDeleteShader(vertexShaderID);
-    glDeleteShader(fragmentShaderID1);
-    glDeleteShader(fragmentShaderID2);
-	glDeleteShader(fragmentShaderID3);
+    this->programs.push_back(shaderMaker.createProgram("vertexShaderc.glsl", "fragmentShaderc.glsl"));
+    this->programs.push_back(shaderMaker.createProgram("vertexShaderc.glsl", "fragmentShaderSf.glsl"));
+    this->programs.push_back(shaderMaker.createProgram("vertexShaderc.glsl", "fragmentShaderSky_ok.glsl"));
+   
 }
 
 void OpenGLManager::setProjectionMatrix(float width, float height)

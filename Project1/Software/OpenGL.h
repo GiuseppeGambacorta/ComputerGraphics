@@ -29,6 +29,6 @@ private:
 	mat4 Projection;
 	GLuint MatProj;
 	GLuint modelMatrix;
-
-	GLuint compileShader(const char* shaderSource, GLenum shaderType);
+	ShaderMaker shaderMaker;
+	
 };
