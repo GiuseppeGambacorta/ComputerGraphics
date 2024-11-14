@@ -44,6 +44,12 @@ int main(void)
     Heart heart(300, openGLManager.getModelMatrix());
 	Rettangle background(300, openGLManager.getModelMatrix());
 	Rettangle player(300, openGLManager.getModelMatrix());
+	Rettangle GameMap(300, openGLManager.getModelMatrix());
+	Rettangle LeftWall(300, openGLManager.getModelMatrix());
+	Rettangle RightWall(300, openGLManager.getModelMatrix());
+	Rettangle TopWall(300, openGLManager.getModelMatrix());
+	Rettangle BottomWall(300, openGLManager.getModelMatrix());
+
     Circle projectile(300, openGLManager.getModelMatrix());
     projectile.disableRendering();
 
@@ -53,10 +59,17 @@ int main(void)
 	staticFigures.push_back(&player);
 	staticFigures.push_back(&projectile);
 
+	staticFigures.push_back(&GameMap);
+	staticFigures.push_back(&LeftWall);
+
+
 
     for (Figure* fig : staticFigures) {
         fig->initFigure(GL_STATIC_DRAW, Colors::Blue);
     }
+
+	GameMap.setColor(Colors::Black);
+    LeftWall.disableRendering();
 
 
     float x, y= 0.0f;
@@ -90,15 +103,22 @@ int main(void)
             
             Figure& Background = *staticFigures.at(2);
             Background.translateFigure(currentWidth / 2, currentHeight / 2, 0.0);
-            Background.scaleFigure(currentWidth, currentHeight, 1.0);
-            Background.renderFigure();
+            Background.scaleFigure(currentWidth*0.5, currentHeight*0.5, 0.0);
+			Background.updateFigure();
 			
 			openGLManager.useProgram(0);
+
+            GameMap.translateFigure(currentWidth / 2, currentHeight / 2, 0.0);
+            GameMap.scaleFigure(currentWidth * 0.4, currentHeight * 0.4, 0.0);
+            GameMap.updateFigure();
+
+			LeftWall.translateFigure(currentWidth*0.05, currentHeight / 2, 0.0);
+			LeftWall.scaleFigure(currentWidth*0.05, currentHeight * 0.5, 0.0);
 			
       
             Figure& heart = *staticFigures.at(0);
             heart.translateFigure(currentWidth / 2, currentHeight / 2, 0.0);
-            heart.scaleFigure(baseScale, baseScale, 1.0);
+            heart.scaleFigure(baseScale, baseScale, 0.0);
             heart.setColor(Colors::Red);
             
             Figure& butterfly = *staticFigures.at(1);
@@ -106,9 +126,11 @@ int main(void)
          
             
             butterfly.translateFigure(currentWidth / 2 - 200, currentHeight / 2, 0.0);
-            butterfly.scaleFigure(baseScale, baseScale, 1.0);
+            butterfly.scaleFigure(baseScale, baseScale, 0.0);
             //figure1->rotateFigure(angolo);
 
+
+		
 
                 // Controlla lo stato dei tasti
             if (glfwGetKey(windowManager->getWindow(), GLFW_KEY_R) == GLFW_PRESS) {
@@ -155,9 +177,8 @@ int main(void)
 		
   
 			for (Figure* fig : staticFigures) {
-				if (fig->isRenderingEnabled()) {
-					fig->renderFigure();
-				}
+					fig->updateFigure();
+				
 			}
 
             
@@ -165,6 +186,7 @@ int main(void)
             if (projectile.isColliding(&heart)) {
 				projectile.disableRendering();
                 heart.disableRendering();
+				heart.disableCollisions();
                 offsety = 0;
 				offsetx = 0;
             }
@@ -172,9 +194,16 @@ int main(void)
 			if (projectile.isColliding(&butterfly)) {
 				projectile.disableRendering();
 				butterfly.disableRendering();
+				butterfly.disableCollisions();
 				offsety = 0;
 				offsetx = 0;
 			}
+
+            if (projectile.isColliding(&LeftWall)) {
+                projectile.disableRendering();
+                offsety = 0;
+                offsetx = 0;
+            }
 
          
 

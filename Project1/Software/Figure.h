@@ -11,7 +11,7 @@ public:
     Figure(unsigned int numberOfTriangles, GLuint matModel);
 
     virtual void initFigure(int TypeOfDraw, vec4 color) = 0;  // Pure virtual function
-    void renderFigure();
+ 
     void deleteFigure();
     void updateFigure();
 
@@ -24,6 +24,9 @@ public:
     void rotateFigure(float angle);
 
     bool isColliding(Figure* otherFigure);
+	void disableCollisions();
+	void enableCollisions();
+	bool isCollisionsEnabled();
     vec4 getCurrentPosition();
     vector<vec4> getBoundingBox();
 	void setColor(vec4 color);
@@ -48,6 +51,7 @@ protected:
     vec4 tempMin, tempMax;
 
     bool renderEnabled;
+    bool collisionsEnabled;
 
     void initVAO();                  // Function to initialize the VAO
     void initDynamicVAO();
@@ -55,6 +59,7 @@ protected:
     void findBoundingBox();
     void updateBoundingBox();
     void updatePosition();
+    void renderFigure();
 
 };
 

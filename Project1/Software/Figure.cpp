@@ -9,7 +9,8 @@ Figure::Figure(unsigned int numberOfTriangles, GLuint matModel) : NumberOfTriang
     this->center = vec4(0.0, 0.0, 0.0, 0.0);
     this->min = vec4(0.0, 0.0, 0.0, 0.0);
     this->max = vec4(0.0, 0.0, 0.0, 0.0);
-    this->renderEnabled = true;
+	this->enableCollisions();
+	this->enableRendering();
 }
 
 
@@ -70,6 +71,7 @@ void Figure::initDynamicVAO() {
 void Figure::initFigure(int TypeOfDraw, vec4 Color) {
     normalizeVertices();
     findBoundingBox();
+
     if (TypeOfDraw == GL_DYNAMIC_DRAW) {
         this->initDynamicVAO();
     }
@@ -85,27 +87,25 @@ void Figure::deleteFigure() {
 }
 
 void Figure::renderFigure() {
-    updateBoundingBox();
-    updatePosition();
+    
     glUniformMatrix4fv(this->MatModel, 1, GL_FALSE, value_ptr(this->Model)); // charge the model matrix into the shader
     glBindVertexArray(this->VAO);
     glDrawArrays(this->renderMode, 0, this->numberOfVertices);
-    this->Model = mat4(1.0);
+
 
 }
 
 void Figure::updateFigure() {
-    glBindVertexArray(this->VAO);
+    
+    updatePosition();
+    if (this->isRenderingEnabled()) {
+        this->renderFigure();
+    }
 
-    glBindBuffer(GL_ARRAY_BUFFER, this->VBO_vertices);
-    glBufferSubData(GL_ARRAY_BUFFER, 0, this->vertices.size() * sizeof(vec3), this->vertices.data());
-
-    glBindBuffer(GL_ARRAY_BUFFER, this->VBO_colors);
-    glBufferSubData(GL_ARRAY_BUFFER, 0, this->colors.size() * sizeof(vec4), this->colors.data());
-
-    glBindBuffer(GL_ARRAY_BUFFER, 0);
-    glBindVertexArray(0);
-    renderFigure();
+    if (this->isCollisionsEnabled()) {
+        this->updateBoundingBox();
+    }
+    this->Model = mat4(1.0);
 }
 
 void Figure::enableRendering()
@@ -209,7 +209,7 @@ void Figure::findBoundingBox() {
 
 bool Figure::isColliding(Figure* otherFigure) {
 
-    if (!otherFigure->isRenderingEnabled() || !this->isRenderingEnabled()) {
+    if (!otherFigure->isCollisionsEnabled() || !this->isCollisionsEnabled()) {
         return false;
     }
 
@@ -234,6 +234,22 @@ vector<vec4> Figure::getBoundingBox() {
     boundingBox.push_back(this->tempMin);
     boundingBox.push_back(this->tempMax);
     return boundingBox;
+}
+
+
+void Figure::enableCollisions()
+{
+	this->collisionsEnabled = true;
+}
+
+void Figure::disableCollisions()
+{
+	this->collisionsEnabled = false;
+}
+
+bool Figure::isCollisionsEnabled()
+{
+	return this->collisionsEnabled;
 }
 
 void Figure::setColor(vec4 color)
