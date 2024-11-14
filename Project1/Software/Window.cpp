@@ -31,3 +31,18 @@ GLFWwindow* WindowManager::getWindow() const
     return window;
 }
 
+void WindowManager::updateWindowSize()
+{
+	int width = (int)this->screenWidth;
+	int height = (int)this->screenHeight;
+    glfwGetWindowSize(this->window, &width, &height);
+	this->screenWidth = width;
+	this->screenHeight = height;
+}
+
+float WindowManager::calculateFigureScale()
+{
+    float minDimension = std::min(screenWidth, screenHeight);
+    return minDimension / 30.0f;
+}
+

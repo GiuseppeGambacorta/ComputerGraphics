@@ -9,6 +9,8 @@ public:
 	float getScreenWidth();
 	float getScreenHeight();
 	GLFWwindow* getWindow() const;
+	void updateWindowSize();
+	float calculateFigureScale();
 
 private:
 	GLFWwindow* window;

@@ -73,9 +73,10 @@ int main(void)
 
         if (deltaTime >= updateInterval) {
             lastUpdateTime = currentTime;
-            int currentWidth, currentHeight;
-            glfwGetWindowSize(windowManager->getWindow(), &currentWidth, &currentHeight);
-            float baseScale = calculateFigureScale(currentWidth, currentHeight);
+			windowManager->updateWindowSize();
+			int currentWidth = windowManager->getScreenWidth();
+			int currentHeight = windowManager->getScreenHeight();
+			float baseScale = windowManager->calculateFigureScale();
 
 
             openGLManager.useProgram(2);
