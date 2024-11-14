@@ -8,7 +8,7 @@
 
 GLuint ShaderMaker::compileShader(const char* shaderPath, GLenum shaderType)
 {
-	// Leggi il codice dello shader dal file
+
 	std::string shaderCode;
 	std::ifstream shaderFile(shaderPath, std::ios::in);
 	if (shaderFile.is_open()) {
@@ -22,7 +22,7 @@ GLuint ShaderMaker::compileShader(const char* shaderPath, GLenum shaderType)
 		return 0;
 	}
 
-	// Compila lo shader
+
 	GLuint shaderID = glCreateShader(shaderType);
 	const char* shaderSource = shaderCode.c_str();
 	glShaderSource(shaderID, 1, &shaderSource, NULL);
@@ -45,11 +45,9 @@ GLuint ShaderMaker::compileShader(const char* shaderPath, GLenum shaderType)
 GLuint ShaderMaker::createProgram(const char* vertexfilename, const char *fragmentfilename)
 {
  
-	// Compila il vertex shader una volta
 	GLuint vertexShaderID = compileShader(vertexfilename, GL_VERTEX_SHADER);
-
-	// Crea il primo programma shader
 	GLuint fragmentShaderID1 = compileShader(fragmentfilename, GL_FRAGMENT_SHADER);
+
 	GLuint programID = glCreateProgram();
 	glAttachShader(programID, vertexShaderID);
 	glAttachShader(programID, fragmentShaderID1);

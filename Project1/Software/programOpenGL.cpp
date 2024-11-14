@@ -6,11 +6,10 @@
 #define PI 3.14159265358979323846
 
 float r = 0.0, g = 1.0, b = 0.0;
-int height = 800, width = 800;
 double mousex = 0.0f, mousey = 0.0f;
 vector<Figure*> staticFigures;
 OpenGLManager openGLManager;
-GLFWwindow* window;
+WindowManager* windowManager;
 float angolo = 90.0f;
 
 float calculateFigureScale(float windowWidth, float windowHeight) {
@@ -24,16 +23,8 @@ int main(void)
         return -1;
     }
 
-    const GLFWvidmode* mode = glfwGetVideoMode(glfwGetPrimaryMonitor());
-    int screenWidth = mode->width;
-    int screenHeight = mode->height;
-    width = screenHeight / 2;
-	height = screenWidth / 2;
-    glfwWindowHint(GLFW_RESIZABLE, GLFW_FALSE);
-
-
-    window = openGLManager.getWindow(width, height, "Hello World");
-    if (window == NULL) {
+    windowManager = openGLManager.getWindowManager("GG-TAN");
+    if (windowManager == NULL) {
         std::cout << "Failed to create the window !" << std::endl;
         return -1;
     }
@@ -46,14 +37,16 @@ int main(void)
     openGLManager.initShaders();
     openGLManager.enableColorBlending();
     openGLManager.useProgram(0);
-
-    openGLManager.setProjectionMatrix((float)width, (float)height);
+   
+    openGLManager.setProjectionMatrix(windowManager->getScreenWidth(), windowManager->getScreenHeight());
 
     Butterfly butterfly(300, openGLManager.getModelMatrix());
     Heart heart(300, openGLManager.getModelMatrix());
 	Rettangle background(300, openGLManager.getModelMatrix());
 	Rettangle player(300, openGLManager.getModelMatrix());
     Circle projectile(300, openGLManager.getModelMatrix());
+    projectile.disableRendering();
+
     staticFigures.push_back(&heart);
     staticFigures.push_back(&butterfly);
 	staticFigures.push_back(&background);
@@ -64,7 +57,7 @@ int main(void)
     for (Figure* fig : staticFigures) {
         fig->initFigure(GL_STATIC_DRAW);
     }
-    projectile.disableRendering();
+
 
     float x, y= 0.0f;
     float lastUpdateTime = glfwGetTime();
@@ -73,7 +66,7 @@ int main(void)
 	float offsety = 0;
     float  projectileAngle;
 
-    while (!glfwWindowShouldClose(window))
+    while (!glfwWindowShouldClose(windowManager->getWindow()))
     {
         float currentTime = glfwGetTime();
         float deltaTime = currentTime - lastUpdateTime;
@@ -81,7 +74,7 @@ int main(void)
         if (deltaTime >= updateInterval) {
             lastUpdateTime = currentTime;
             int currentWidth, currentHeight;
-            glfwGetWindowSize(window, &currentWidth, &currentHeight);
+            glfwGetWindowSize(windowManager->getWindow(), &currentWidth, &currentHeight);
             float baseScale = calculateFigureScale(currentWidth, currentHeight);
 
 
@@ -115,10 +108,10 @@ int main(void)
 
 
                 // Controlla lo stato dei tasti
-            if (glfwGetKey(window, GLFW_KEY_R) == GLFW_PRESS) {
+            if (glfwGetKey(windowManager->getWindow(), GLFW_KEY_R) == GLFW_PRESS) {
                 angolo -= 1.0f;
             }
-            if (glfwGetKey(window, GLFW_KEY_E) == GLFW_PRESS) {
+            if (glfwGetKey(windowManager->getWindow(), GLFW_KEY_E) == GLFW_PRESS) {
                 angolo += 1.0f;
             }
 
@@ -140,7 +133,7 @@ int main(void)
             }
 
 			
-            if (glfwGetKey(window, GLFW_KEY_SPACE) == GLFW_PRESS) {
+            if (glfwGetKey(windowManager->getWindow(), GLFW_KEY_SPACE) == GLFW_PRESS) {
                 if (!projectile.isRenderingEnabled()) {
                     projectile.enableRendering();
                     projectile.translateFigure(currentWidth / 2, currentHeight / 10, 0.0);
@@ -186,7 +179,7 @@ int main(void)
 
 		
 
-            glfwSwapBuffers(window);
+            glfwSwapBuffers(windowManager->getWindow());
         }
         glfwPollEvents();
     }

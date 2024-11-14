@@ -20,25 +20,12 @@ int OpenGLManager::initOpenGL()
     return 1;
 }
 
-GLFWwindow* OpenGLManager::getWindow(int width, int height, const char* title)
+WindowManager* OpenGLManager::getWindowManager(const char* title)
 {
-    /* Create a window on the screen and initialize the OpenGL context
-    needed for rendering graphics within that window */
+	if (this->window == NULL)
+		this->window = new WindowManager(title);
 
-    GLFWwindow* window = glfwCreateWindow(width, height, title, NULL, NULL);
-    if (!window)
-    {
-        glfwTerminate(); // Free resources allocated by glfwInit
-        return NULL;
-    }
-    this->window = window;
-
-    // Make the current context and associate it with the window.
-    // In OpenGL, a rendering context is a state machine that stores 
-    // all information and resources required for graphical rendering
-    glfwMakeContextCurrent(window);
-
-    return window;
+    return this->window;
 }
 
 // Verify if the GLAD library successfully loaded all OpenGL function pointers
@@ -55,16 +42,16 @@ int OpenGLManager::gladLoad()
 void OpenGLManager::setCallbacks()
 {
     // Key press
-    glfwSetKeyCallback(this->window, key_callback);
+    glfwSetKeyCallback(this->window->getWindow(), key_callback);
 
     // Mouse movement within the window
-    glfwSetCursorPosCallback(this->window, cursor_position_callback);
+    glfwSetCursorPosCallback(this->window->getWindow(), cursor_position_callback);
 
     // Screen click with the left button
-    glfwSetMouseButtonCallback(this->window, mouse_button_callback);
+    glfwSetMouseButtonCallback(this->window->getWindow(), mouse_button_callback);
 
     // Window resize
-    glfwSetFramebufferSizeCallback(this->window, framebuffer_size_callback);
+    glfwSetFramebufferSizeCallback(this->window->getWindow(), framebuffer_size_callback);
 }
 
 void OpenGLManager::enableColorBlending()

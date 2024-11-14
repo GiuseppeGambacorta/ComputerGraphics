@@ -137,6 +137,7 @@
     <ClCompile Include="ShaderMaker.cpp" />
     <ClCompile Include="programOpenGL.cpp" />
     <ClCompile Include="glad.c" />
+    <ClCompile Include="Window.cpp" />
   </ItemGroup>
   <ItemGroup>
     <None Include="fragmentShaderSf.glsl" />
@@ -152,6 +153,7 @@
     <ClInclude Include="lib.h" />
     <ClInclude Include="OpenGL.h" />
     <ClInclude Include="ShaderMaker.h" />
+    <ClInclude Include="Window.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

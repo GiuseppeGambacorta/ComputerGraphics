@@ -2,6 +2,7 @@
 #include <glad/glad.h>
 #include <GLFW/glfw3.h>
 #include "lib.h"
+#include "Window.h"
 
 
 
@@ -10,7 +11,7 @@ class OpenGLManager
 {
 public:
 	 int initOpenGL();
-	 GLFWwindow* getWindow(int width, int height,const char* title);
+	 WindowManager* getWindowManager(const char* title);
 	 int gladLoad();
 	 void setCallbacks();
 	 void initShaders();
@@ -24,7 +25,7 @@ public:
 	 void useProgram(unsigned int index);
 private:
   
-	GLFWwindow* window;
+	WindowManager* window;
 	vector<GLuint> programs;
 	mat4 Projection;
 	GLuint MatProj;
